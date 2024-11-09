@@ -1,17 +1,27 @@
 package com.example.gomarina_mobile
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.gomarina_mobile.ui.theme.GoMarina_MobileTheme
+
+import com.example.gomarina_mobile.ui.theme.FeedbackActivity
+import com.example.gomarina_mobile.ui.theme.Listpesanan
+import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,29 +29,131 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             GoMarina_MobileTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                MainScreen { goToNextActivity() }
             }
         }
+    }
+
+    private fun goToNextActivity() {
+        val intent = Intent(this, Listpesanan()::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        startActivity(intent)
+        finish()
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun MainScreen(onFinish: () -> Unit) {
+    val progress1 = remember { mutableStateOf(0f) }
+    val progress2 = remember { mutableStateOf(0f) }
+    val progress3 = remember { mutableStateOf(0f) }
+    val imageResId = remember { mutableStateOf(R.drawable.vb) }
+    var currentProgressBar by remember { mutableStateOf(1) }
+    var isAnimationRunning by remember { mutableStateOf(true) }
+    var isButtonClicked by remember { mutableStateOf(false) }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    GoMarina_MobileTheme {
-        Greeting("Android")
+    LaunchedEffect(isButtonClicked) {
+        while (isAnimationRunning && !isButtonClicked) {
+            when (currentProgressBar) {
+                1 -> {
+                    for (i in 0..200) {
+                        delay(20)
+                        progress1.value = i.toFloat()
+                        if (isButtonClicked) return@LaunchedEffect
+                    }
+                    currentProgressBar = 2
+                    imageResId.value = R.drawable.vb
+                }
+                2 -> {
+                    for (i in 0..100) {
+                        delay(20)
+                        progress2.value = i.toFloat()
+                        if (isButtonClicked) return@LaunchedEffect
+                    }
+                    currentProgressBar = 3
+                    imageResId.value = R.drawable.vb
+                }
+                3 -> {
+                    for (i in 0..100) {
+                        delay(20)
+                        progress3.value = i.toFloat()
+                        if (isButtonClicked) return@LaunchedEffect
+                    }
+                    isAnimationRunning = false
+                    onFinish()
+                }
+            }
+        }
+        if (isButtonClicked) {
+            onFinish()
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        Image(
+            painter = painterResource(id = imageResId.value),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize()
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 52.dp, start = 32.dp, end = 32.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                LinearProgressIndicator(
+                    progress = progress1.value / 200,
+                    color = Color(0xFF4CAF50),
+                    modifier = Modifier
+                        .weight(10f)
+                        .height(5.dp)
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                LinearProgressIndicator(
+                    progress = progress2.value / 100,
+                    color = Color(0xFF4CAF50),
+                    modifier = Modifier
+                        .weight(10f)
+                        .height(5.dp)
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                LinearProgressIndicator(
+                    progress = progress3.value / 100,
+                    color = Color(0xFF4CAF50),
+                    modifier = Modifier
+                        .weight(10f)
+                        .height(5.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(50.dp))
+
+            Button(
+                onClick = {
+                    isButtonClicked = true
+                },
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(bottom = 29.dp)
+            ) {
+                Text(text = "Mulai Belanja")
+            }
+        }
     }
 }
