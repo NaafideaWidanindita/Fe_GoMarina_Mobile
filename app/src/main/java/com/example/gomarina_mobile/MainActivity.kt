@@ -17,6 +17,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.gomarina_mobile.ui.theme.GoMarina_MobileTheme
 
 import com.example.gomarina_mobile.ui.theme.FeedbackActivity
@@ -153,7 +158,42 @@ fun MainScreen(onFinish: () -> Unit) {
                     .padding(bottom = 29.dp)
             ) {
                 Text(text = "Mulai Belanja")
+
+                val navController = rememberNavController()
+                NavigationApp(navController = navController)
             }
         }
     }
 }
+
+
+@Composable
+fun NavigationApp(navController: NavHostController) {
+    NavHost(
+        navController = navController,
+        startDestination = "DetailProduk"
+    ) {
+        composable("DetailProduk") {
+            DetailProdukScreen(navController)
+        }
+        composable("Keranjang") {
+            KeranjangScreen(navController)
+        }
+        composable("DetailPesanan") {
+            DetailPesananScreen(navController)
+        }
+        composable("Pembayaran") {
+            PembayaranScreen(navController)
+        }
+        composable("PembayaranBerhasil") {
+            PembayaranBerhasilScreen(
+                onKembaliKeBeranda = { navController.popBackStack("DetailProduk", inclusive = false) },
+                onPesanan = { navController.navigate("CekPesanan") }
+            )
+        }
+        composable("CekPesanan") {
+            CekPesananScreen(navController)
+        }
+    }
+}
+
