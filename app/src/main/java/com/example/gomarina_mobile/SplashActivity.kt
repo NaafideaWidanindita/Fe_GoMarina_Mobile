@@ -1,4 +1,4 @@
-package com.example.gomarina_mobile.ui.theme
+package com.example.gomarina_mobile
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,8 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
-import com.example.gomarina_mobile.MainActivity
-import com.example.gomarina_mobile.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
