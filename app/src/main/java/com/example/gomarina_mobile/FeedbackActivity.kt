@@ -189,3 +189,10 @@ fun BottomNavigationBar(navController: NavController) {
         )
     }
 }
+
+@Preview (showBackground = true)
+@Composable
+fun FeedbackPreview() {
+    val navController = rememberNavController()
+    FeedbackScreen(navController)
+}
