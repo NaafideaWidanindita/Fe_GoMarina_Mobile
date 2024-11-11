@@ -111,6 +111,7 @@ fun UserProfileSection() {
                 color = Color.Black,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
+
             Text(
                 text = "Lihat profil",
                 fontSize = 14.sp,

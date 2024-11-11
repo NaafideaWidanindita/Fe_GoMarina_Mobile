@@ -45,6 +45,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
 @Composable
 fun MainScreen(onFinish: () -> Unit) {
     val progress1 = remember { mutableStateOf(0f) }
