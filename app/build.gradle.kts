@@ -67,12 +67,14 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
 
     implementation("com.google.accompanist:accompanist-flowlayout:0.30.1")
-    implementation("androidx.navigation:navigation-compose:2.6.0")
     val composeBom = platform("androidx.compose:compose-bom:2024.09.00")
     implementation(composeBom)
 
     debugImplementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.compose.material:material")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -82,7 +84,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    val nav_version = "2.8.3"
-
-    implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation("androidx.navigation:navigation-compose:2.8.3")
 }
