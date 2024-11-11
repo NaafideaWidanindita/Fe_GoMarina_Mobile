@@ -27,11 +27,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun CekPesananScreen(navController: NavHostController) {
+fun CekPesananScreen() {
     Scaffold(
         topBar = { CekPesananHeader() },
         bottomBar = { BottomNavigation() },
@@ -113,5 +112,5 @@ fun BottomNavigation() {
 @Composable
 fun CekPesananPreview() {
     val navController = rememberNavController()
-    CekPesananScreen(navController)
+    CekPesananScreen()
 }

@@ -231,7 +231,7 @@ fun ButtonPembayaran(navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFF225F3E), RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+                .background(Color(0xFF1A6659), RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -243,7 +243,7 @@ fun ButtonPembayaran(navController: NavController) {
 
             Button(
                 onClick = { navController.navigate("PembayaranBerhasil") },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9CE5A5)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6CE9BF)),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(

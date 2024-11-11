@@ -13,6 +13,6 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val warnaBg = Color(0xFF01241E)
-
+var warnaSec = Color(0xFF72D7AA)
 
 
