@@ -8,11 +8,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material3.*
+import androidx.compose.material.*
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,13 +26,13 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.gomarina_mobile.R
+import com.example.gomarina_mobile.ui.theme.*
 
 class FeedbackActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-             val navController = rememberNavController()
+            val navController = rememberNavController()
             NavHost(navController = navController, startDestination = "feedback") {
                 composable("settings") { SettingsScreen(navController) }
                 composable("feedback") { FeedbackScreen(navController) }
@@ -57,18 +54,17 @@ fun StarRating(rating: Float, onRatingChanged: (Float) -> Unit) {
         (0..4).forEach { index ->
             IconButton(onClick = { onRatingChanged((index + 1).toFloat()) }) {
                 Icon(
-                    painter = painterResource(id = if (index < rating) R.drawable.ic_star_filled else R.drawable.ic_star),
+                    painter = painterResource(
+                        id = if (index < rating) R.drawable.ic_star_filled else R.drawable.ic_star
+                    ),
                     contentDescription = "Star Rating",
-                    tint = Color.Yellow,
+                    tint = yellowStar,
                     modifier = Modifier.size(40.dp)
                 )
             }
         }
     }
 }
-
-
-
 
 @Composable
 fun FeedbackScreen(navController: NavController) {
@@ -79,7 +75,7 @@ fun FeedbackScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFE0F7FA)),
+            .background(warnab),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -87,7 +83,7 @@ fun FeedbackScreen(navController: NavController) {
                 .fillMaxWidth()
                 .padding(start = 16.dp, top = 16.dp)
         ) {
-            IconButton(onClick = { navController.popBackStack() }) { // Navigasi kembali ke halaman sebelumnya
+            IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_arrow_back_24),
                     contentDescription = "Kembali"
@@ -95,9 +91,9 @@ fun FeedbackScreen(navController: NavController) {
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
-        Text(text = "Feedback", fontSize = 29.sp, color = Color(0xFF525252))
+        Text(text = "Feedback", fontSize = 29.sp, color = textColorPrimary)
         Spacer(modifier = Modifier.height(8.dp))
-        Text(text = "Berikan penilaian anda", fontSize = 18.sp, color = Color(0xFF525252))
+        Text(text = "Berikan penilaian anda", fontSize = 18.sp, color = textColorPrimary)
 
         Spacer(modifier = Modifier.height(20.dp))
         StarRating(rating = rating, onRatingChanged = { rating = it })
@@ -108,11 +104,11 @@ fun FeedbackScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 30.dp, vertical = 10.dp)
-                .background(Color(0xFFD3D3D3), shape = RoundedCornerShape(8.dp))
+                .background(Kotak, shape = RoundedCornerShape(8.dp))
                 .padding(8.dp),
             decorationBox = { innerTextField ->
                 if (feedbackText.text.isEmpty()) {
-                    Text(text = "Ceritakan pengalaman anda", color = Color(0xFF525252))
+                    Text(text = "Ceritakan pengalaman anda", color = textColorPrimary)
                 }
                 innerTextField()
             }
@@ -128,6 +124,7 @@ fun FeedbackScreen(navController: NavController) {
                     Toast.makeText(context, "Feedback terkirim! Terima kasih!", Toast.LENGTH_SHORT).show()
                 }
             },
+            colors = ButtonDefaults.buttonColors(backgroundColor = button),
             modifier = Modifier
                 .fillMaxWidth(0.8f)
                 .padding(bottom = 60.dp)
@@ -161,7 +158,7 @@ fun BottomNavigationBar(navController: NavController) {
             },
             label = { Text("Beranda", color = Color.Gray) },
             selected = false,
-            onClick = { navController.navigate("home") } // Navigate to home
+            onClick = { navController.navigate("home") }
         )
         BottomNavigationItem(
             icon = {
@@ -173,24 +170,24 @@ fun BottomNavigationBar(navController: NavController) {
             },
             label = { Text("Pesanan", color = Color.Gray) },
             selected = false,
-            onClick = { navController.navigate("pesanan") } // Navigate to order page
+            onClick = { navController.navigate("pesanan") }
         )
         BottomNavigationItem(
             icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_settings),
                     contentDescription = "Pengaturan",
-                    tint = Color(0xFF00796B)
+                    tint = warnaBg
                 )
             },
-            label = { Text("Pengaturan", color = Color(0xFF00796B)) },
+            label = { Text("Pengaturan", color = warnaBg) },
             selected = false,
-            onClick = { navController.navigate("settings") } // Navigate to settings page
+            onClick = { navController.navigate("settings") }
         )
     }
 }
 
-@Preview (showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun FeedbackPreview() {
     val navController = rememberNavController()

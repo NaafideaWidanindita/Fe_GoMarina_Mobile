@@ -24,6 +24,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.gomarina_mobile.R
+import com.example.gomarina_mobile.ui.theme.button
+import com.example.gomarina_mobile.ui.theme.profilwar
+import com.example.gomarina_mobile.ui.theme.warnaSec
 
 class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +78,7 @@ fun ProfileHeader() {
             .fillMaxWidth()
             .height(180.dp)
             .clip(RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
-            .background(Color(0xFF00796B))
+            .background(profilwar)
             .padding(0.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -139,10 +142,11 @@ fun ProfileContent(paddingValues: PaddingValues) {
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp)),
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF00C853))
+            colors = ButtonDefaults.buttonColors(backgroundColor = button)
         ) {
             Text(text = "Update", color = Color.White)
         }
+
     }
 }
 

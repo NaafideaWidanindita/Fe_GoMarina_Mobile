@@ -13,6 +13,11 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 val warnaBg = Color(0xFF01241E)
 var warnaSec = Color(0xFF72D7AA)
-
+val warnab = Color(0xFFF0F7F6)
 val bacground =Color(0xFFE7F0DD)
 val button =Color(0xFF597545)
+val textColorPrimary = Color(0xFF525252)
+val yellowStar = Color(0xFFFFEB3B)
+val Kotak = Color(0xFFD9D9D9)
+val profilwar = Color(0xFF1A6659)
+

@@ -1,5 +1,8 @@
 package com.example.gomarina_mobile
 
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -50,8 +53,21 @@ import androidx.compose.ui.unit.sp
 import com.example.gomarina_mobile.ui.theme.poppinsFamily
 import com.example.gomarina_mobile.ui.theme.warnaBg
 
-@Composable
 
+
+class LoginActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+
+                LoginScreen()
+
+        }
+    }
+}
+
+
+@Composable
 fun LoginScreen(){
     var username by remember { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
