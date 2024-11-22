@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.gomarina_mobile.ui.theme.poppinsFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -163,7 +164,7 @@ fun ButtonBayar(navController: NavController) {
                     .height(50.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6CE9BF))
             ) {
-                Text(text = "Bayar", color = Color.Black, fontFamily = poppinsFontFamily, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                Text(text = "Bayar", color = Color.Black, fontFamily = poppinsFamily, fontWeight = FontWeight.Bold, fontSize = 20.sp)
             }
         }
     }

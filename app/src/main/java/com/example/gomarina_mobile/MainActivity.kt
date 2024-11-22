@@ -172,7 +172,7 @@ fun NavigationApp(navController: NavHostController) {
         startDestination = "DetailProduk"
     ) {
         composable("DetailProduk") {
-            DetailProdukScreen(navController)
+            Detail_Product(navController)
         }
         composable("Keranjang") {
             KeranjangScreen(navController)

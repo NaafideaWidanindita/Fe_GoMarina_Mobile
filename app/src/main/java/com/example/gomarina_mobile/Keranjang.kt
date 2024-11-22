@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.gomarina_mobile.ui.theme.poppinsFamily
 
 @Composable
 fun KeranjangScreen(navController: NavHostController) {
@@ -72,7 +73,7 @@ fun KeranjangHeader() {
         Text(
             text = "Keranjang Saya",
             fontSize = 32.sp,
-            fontFamily = poppinsFontFamily,
+            fontFamily = poppinsFamily,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(8.dp)
@@ -118,7 +119,7 @@ fun ItemKeranjang() {
         Column(
             modifier = Modifier.weight(1f)
         ) {
-            Text(text = "Jambu", fontFamily = poppinsFontFamily, fontWeight = FontWeight.Bold, fontSize = 16.sp
+            Text(text = "Jambu", fontFamily = poppinsFamily, fontWeight = FontWeight.Bold, fontSize = 16.sp
             )
             Text(text = "Rp32.000", color = Color.Gray, fontSize = 14.sp
             )
@@ -195,7 +196,7 @@ fun ButtonCheckout(navController: NavController) {
                     .fillMaxHeight()
                     .width(150.dp)
             ) {
-                Text(text = "Checkout (0)", color = Color.Black, fontFamily = poppinsFontFamily, fontWeight = FontWeight.Medium,
+                Text(text = "Checkout (0)", color = Color.Black, fontFamily = poppinsFamily, fontWeight = FontWeight.Medium,
                 )
             }
         }

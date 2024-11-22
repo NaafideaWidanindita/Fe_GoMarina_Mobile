@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.gomarina_mobile.ui.theme.poppinsFamily
 
 @Composable
 fun PembayaranScreen(navController: NavHostController) {
@@ -74,7 +75,7 @@ fun PembayaranHeader() {
             .statusBarsPadding(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "Pembayaran", fontSize = 32.sp, fontFamily = poppinsFontFamily, fontWeight = FontWeight.Bold, color = Color.Black,
+        Text(text = "Pembayaran", fontSize = 32.sp, fontFamily = poppinsFamily, fontWeight = FontWeight.Bold, color = Color.Black,
             modifier = Modifier
                 .padding(8.dp)
         )
@@ -92,7 +93,7 @@ fun Alamat() {
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Alamat", color = Color.Black, fontSize = 24.sp, fontFamily = poppinsFontFamily, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f)
+            Text(text = "Alamat", color = Color.Black, fontSize = 24.sp, fontFamily = poppinsFamily, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f)
             )
             IconButton(
                 onClick = { /* Action for edit */ },
@@ -112,21 +113,9 @@ fun Alamat() {
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Nama: ", color = Color.Black, fontSize = 15.sp, fontFamily = poppinsFontFamily, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f)
+                Text(text = "Nama: ", color = Color.Black, fontSize = 15.sp, fontFamily = poppinsFamily, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f)
                 )
-                Text(text = "Naafi'dea", color = Color.Black, fontSize = 15.sp, fontFamily = poppinsFontFamily, fontWeight = FontWeight.Medium
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = "Home: ", color = Color.Black, fontSize = 15.sp, fontFamily = poppinsFontFamily, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f)
-                )
-                Text(text = "Gang Delima No.4, RT/RW 01/01", color = Color.Black, fontSize = 15.sp, fontFamily = poppinsFontFamily, fontWeight = FontWeight.Medium
+                Text(text = "Naafi'dea", color = Color.Black, fontSize = 15.sp, fontFamily = poppinsFamily, fontWeight = FontWeight.Medium
                 )
             }
 
@@ -136,11 +125,23 @@ fun Alamat() {
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Patokan: ", color = Color.Black, fontSize = 15.sp, fontFamily = poppinsFontFamily, fontWeight = FontWeight.Bold,
+                Text(text = "Home: ", color = Color.Black, fontSize = 15.sp, fontFamily = poppinsFamily, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f)
+                )
+                Text(text = "Gang Delima No.4, RT/RW 01/01", color = Color.Black, fontSize = 15.sp, fontFamily = poppinsFamily, fontWeight = FontWeight.Medium
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "Patokan: ", color = Color.Black, fontSize = 15.sp, fontFamily = poppinsFamily, fontWeight = FontWeight.Bold,
                     modifier = Modifier
                         .weight(1f)
                 )
-                Text(text = "Sebelah rumah pak RT", color = Color.Black, fontSize = 15.sp, fontFamily = poppinsFontFamily, fontWeight = FontWeight.Medium
+                Text(text = "Sebelah rumah pak RT", color = Color.Black, fontSize = 15.sp, fontFamily = poppinsFamily, fontWeight = FontWeight.Medium
                 )
             }
         }
@@ -154,7 +155,7 @@ fun Pembayaran() {
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        Text(text = "Pembayaran", color = Color.Black, fontSize = 20.sp, fontFamily = poppinsFontFamily, fontWeight = FontWeight.Bold
+        Text(text = "Pembayaran", color = Color.Black, fontSize = 20.sp, fontFamily = poppinsFamily, fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -166,7 +167,7 @@ fun Pembayaran() {
         ) {
             Column {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "Transfer", color = Color.Black, fontSize = 15.sp, fontFamily = poppinsFontFamily, fontWeight = FontWeight.Bold,
+                    Text(text = "Transfer", color = Color.Black, fontSize = 15.sp, fontFamily = poppinsFamily, fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .padding(start = 16.dp, end = 16.dp, top = 16.dp)
                     )
@@ -186,7 +187,7 @@ fun Pembayaran() {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row (verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "Upload Bukti TF", color = Color.Black, fontSize = 15.sp, fontFamily = poppinsFontFamily, fontWeight = FontWeight.Bold,
+                    Text(text = "Upload Bukti TF", color = Color.Black, fontSize = 15.sp, fontFamily = poppinsFamily, fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .padding(start = 16.dp, end = 16.dp)
                     )

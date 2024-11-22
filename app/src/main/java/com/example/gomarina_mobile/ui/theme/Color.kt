@@ -14,4 +14,5 @@ val Pink40 = Color(0xFF7D5260)
 val warnaBg = Color(0xFF01241E)
 var warnaSec = Color(0xFF72D7AA)
 
-
+val bacground =Color(0xFFE7F0DD)
+val button =Color(0xFF597545)

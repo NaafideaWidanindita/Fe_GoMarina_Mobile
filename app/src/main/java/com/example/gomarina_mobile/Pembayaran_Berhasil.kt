@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gomarina_mobile.ui.theme.poppinsFamily
 
 @Composable
 fun PembayaranBerhasilScreen(
@@ -60,7 +61,7 @@ fun PembayaranBerhasilHeader(){
             .statusBarsPadding(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "Pembayaran Berhasil", fontSize = 10.sp, fontFamily = poppinsFontFamily, fontWeight = FontWeight.Medium, color = Color.Black
+        Text(text = "Pembayaran Berhasil", fontSize = 10.sp, fontFamily = poppinsFamily, fontWeight = FontWeight.Medium, color = Color.Black
         )
     }
 }
@@ -85,7 +86,7 @@ fun PembayaranBerhasil(
                 modifier = Modifier.size(100.dp) // Sesuaikan ukuran sesuai kebutuhan
             )
             Spacer(modifier = Modifier.height(24.dp))
-            Text(text = "Pembayaran Berhasil", fontSize = 28.sp, fontFamily = poppinsFontFamily, fontWeight = FontWeight.Bold, color = Color.Black
+            Text(text = "Pembayaran Berhasil", fontSize = 28.sp, fontFamily = poppinsFamily, fontWeight = FontWeight.Bold, color = Color.Black
             )
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -100,7 +101,7 @@ fun PembayaranBerhasil(
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6CE9BF)), // Mengatur warna tombol
                     modifier = Modifier.weight(2f)
                 ) {
-                    Text(text = "Kembali ke Beranda", color = Color.Black, fontFamily = poppinsFontFamily, fontWeight = FontWeight.Medium, fontSize = 10.sp
+                    Text(text = "Kembali ke Beranda", color = Color.Black, fontFamily = poppinsFamily, fontWeight = FontWeight.Medium, fontSize = 10.sp
                     )
                 }
 
@@ -109,7 +110,7 @@ fun PembayaranBerhasil(
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6CE9BF)), // Mengatur warna tombol
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = "Pesanan", color = Color.Black, fontFamily = poppinsFontFamily, fontWeight = FontWeight.Medium, fontSize = 10.sp
+                    Text(text = "Pesanan", color = Color.Black, fontFamily = poppinsFamily, fontWeight = FontWeight.Medium, fontSize = 10.sp
                     )
                 }
             }
@@ -125,7 +126,7 @@ fun ThanksCard(){
             .navigationBarsPadding(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "GoMarina", fontSize = 12.sp, fontFamily = poppinsFontFamily, fontWeight = FontWeight.Medium, color = Color.Black
+        Text(text = "GoMarina", fontSize = 12.sp, fontFamily = poppinsFamily, fontWeight = FontWeight.Medium, color = Color.Black
         )
     }
 }
