@@ -43,3 +43,7 @@ val poppinsFamily = FontFamily(
     Font(R.font.poppins_regular, FontWeight.Normal),
     Font(R.font.poppins_semibold, FontWeight.SemiBold)
 )
+
+val robotoFamily = FontFamily(
+    Font(R.font.roboto_medium,FontWeight.Medium)
+)
