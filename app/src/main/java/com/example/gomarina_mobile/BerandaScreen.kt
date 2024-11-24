@@ -1,4 +1,4 @@
-package com.example.gomarina_mobile.component
+package com.example.gomarina_mobile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -27,7 +27,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.gomarina_mobile.R
 import com.example.gomarina_mobile.model.Produk
 import com.example.gomarina_mobile.ui.theme.poppinsFamily
 import java.math.BigDecimal
@@ -46,7 +45,8 @@ fun BerandaContent (
         modifier = modifier
             .padding(16.dp)
             .width(200.dp)
-            .height(220.dp),
+            .height(220.dp)
+            .clickable { onItemClick(produk.id) },
         shape = RoundedCornerShape(16.dp),
         shadowElevation = 4.dp,
         color = Color.White
@@ -59,8 +59,7 @@ fun BerandaContent (
                 modifier = Modifier
                     .padding(bottom = 8.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .fillMaxWidth()
-                    .clickable { onItemClick(produk.id) },
+                    .fillMaxWidth(),
                 painter = painterResource(id = produk.image),
                 contentDescription = produk.name,
                 contentScale = ContentScale.Crop,
@@ -91,7 +90,7 @@ fun BerandaContent (
                     Icons.Default.FavoriteBorder,
                     contentDescription = "Favorite",
                     modifier = Modifier
-                        .size(24.dp)
+                        .size(30.dp)
                         .clickable {  }
                 )
             }
@@ -103,10 +102,9 @@ fun BerandaContent (
 @Composable
 private fun BerandaContentPrev() {
         BerandaContent(
-            produk = Produk(1,"Jambu",
-                R.drawable.buahsatu,"Buah Jambu Yang Manis", BigDecimal("32000"),100),
+            produk = Produk(1,"Jambu",R.drawable.buahsatu,"Buah Jambu Yang Manis", BigDecimal("32000"),100),
             onItemClick ={produkId ->
                 println("Produk id: $produkId")
             }
         )
-    }
+}
