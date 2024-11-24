@@ -5,22 +5,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.gomarina_mobile.component.KeranjangContent
-import com.example.gomarina_mobile.component.KeranjangHeader
+import com.example.gomarina_mobile.component.PembayaranContent
+import com.example.gomarina_mobile.component.PembayaranHeader
 import com.example.gomarina_mobile.dummyData.DummyData
 
 @Composable
-fun KeranjangScreen(navController: NavHostController) {
+fun PembayaranScreen(navController: NavHostController) {
     val keranjangItems = DummyData.dataKeranjangItems
     Column {
-        KeranjangHeader(navController)
-        KeranjangContent(navController = navController, items = keranjangItems)
+        PembayaranHeader(navController)
+        PembayaranContent()
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun KeranjangScreenPreview() {
+private fun PembayaranBerhasilScreenPreview() {
     val navController = rememberNavController()
-    KeranjangScreen(navController = navController)
+    PembayaranScreen(navController)
 }

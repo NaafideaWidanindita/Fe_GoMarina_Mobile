@@ -1,4 +1,4 @@
-package com.example.gomarina_mobile
+package com.example.gomarina_mobile.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,36 +29,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.gomarina_mobile.R
+import com.example.gomarina_mobile.ui.theme.bacground
 
 @Composable
-fun CekPesananScreen(navController: NavHostController) {
-    Scaffold(
-        topBar = { CekPesananHeader() },
-        bottomBar = { BottomNavigation() },
-        content = { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xFFF0F7F6))
-                    .padding(paddingValues)
-            ) {
-                CekPesanan()
-            }
-        }
-    )
-}
-
-@Composable
-fun CekPesananHeader(){
-    Box(
+fun CekContent(navController: NavHostController) {
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .statusBarsPadding()
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
+            .fillMaxSize()
+            .background(bacground)
     ) {
-        Text(text = "Cek Pesanan", fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Color.Black
-        )
+        CekPesanan()
     }
 }
 
@@ -104,14 +85,9 @@ fun CekPesanan(){
     }
 }
 
-@Composable
-fun BottomNavigation() {
-   //belumzzz
-}
-
 @Preview(showBackground = true)
 @Composable
-fun CekPesananPreview() {
+fun CekContentPreview() {
     val navController = rememberNavController()
-    CekPesananScreen(navController)
+    CekContent(navController)
 }

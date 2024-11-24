@@ -4,6 +4,9 @@ import com.example.gomarina_mobile.R
 import com.example.gomarina_mobile.model.Produk
 import com.example.gomarina_mobile.model.KeranjangItem
 import com.example.gomarina_mobile.model.Address
+import com.example.gomarina_mobile.model.Delivery
+import com.example.gomarina_mobile.model.DeliveryOption
+import com.example.gomarina_mobile.model.DeliveryStatus
 import java.math.BigDecimal
 import java.math.BigInteger
 
@@ -107,4 +110,26 @@ object DummyData {
             detail = "Villa dengan kolam renang di halaman depan"
         )
     )
+
+    // Data dummy untuk pengiriman
+    val dataDelivery = listOf(
+        Delivery(
+            id = 1,
+            order_id = BigInteger("10001"),
+            option = DeliveryOption.jnt,  // Memilih pengiriman JNT
+            status = DeliveryStatus.dikirim  // Status pengiriman adalah dikirim
+        ),
+        Delivery(
+            id = 2,
+            order_id = BigInteger("10002"),
+            option = DeliveryOption.jne,  // Memilih pengiriman JNE
+            status = DeliveryStatus.dikirim  // Status pengiriman adalah dikemas
+        ),
+        Delivery(
+            id = 3,
+            order_id = BigInteger("10003"),
+            option = DeliveryOption.langsung,
+            status = DeliveryStatus.dikirim
+        )
+        )
 }

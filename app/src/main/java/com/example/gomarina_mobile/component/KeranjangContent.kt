@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.gomarina_mobile.component
 
 import androidx.compose.foundation.Image
@@ -43,7 +45,6 @@ fun KeranjangContent(
     var total by remember { mutableStateOf(0) }
     var isAllChecked by remember { mutableStateOf(false) }
 
-    // Menghitung total berdasarkan item yang ada
     LaunchedEffect(itemList) {
         total = itemList.filter { it.isChecked }.sumOf { it.quantity * it.price }
     }
@@ -234,7 +235,6 @@ fun ButtonCheckout(
 ) {
     var isAllChecked by remember { mutableStateOf(false) }
 
-    // Update status All checkbox when individual item checkboxes are changed
     LaunchedEffect(itemList) {
         isAllChecked = itemList.all { it.isChecked }
     }
@@ -253,9 +253,9 @@ fun ButtonCheckout(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(
-                    checked = isAllChecked, // When true, all checkboxes are selected
+                    checked = isAllChecked,
                     onCheckedChange = { checked ->
-                        // When "Semua" checkbox is clicked, toggle the state of all item checkboxes
+                        // jika semua di klik maka semua akan tercentang
                         isAllChecked = checked
                         itemList.forEachIndexed { index, item ->
                             onItemCheckedChange(index, checked)
@@ -263,9 +263,9 @@ fun ButtonCheckout(
                         onAllCheckedChange(checked)
                     },
                     colors = CheckboxDefaults.colors(
-                        checkedColor = button, // Change the checked color to button color
-                        uncheckedColor = Color.Gray, // Change the unchecked color to gray
-                        checkmarkColor = Color.White // The checkmark color when checked
+                        checkedColor = button,
+                        uncheckedColor = Color.Gray,
+                        checkmarkColor = Color.White
                     ),
                     modifier = Modifier.padding(16.dp)
                 )

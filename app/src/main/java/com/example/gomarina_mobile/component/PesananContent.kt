@@ -21,6 +21,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
@@ -35,6 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,11 +58,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.gomarina_mobile.dummyData.DummyData
+import com.example.gomarina_mobile.dummyData.DummyData.dataDelivery
+import com.example.gomarina_mobile.model.Delivery
 import com.example.gomarina_mobile.model.KeranjangItem
 import com.example.gomarina_mobile.ui.theme.bacground
 import com.example.gomarina_mobile.ui.theme.bg_button
+import com.example.gomarina_mobile.ui.theme.bg_card
 import com.example.gomarina_mobile.ui.theme.bg_card_pesan
 import com.example.gomarina_mobile.ui.theme.button
+import com.example.gomarina_mobile.ui.theme.poppinsFamily
 
 @Composable
 fun PesananContent(navController: NavController) {
@@ -84,81 +90,8 @@ fun PesananContent(navController: NavController) {
             DetailBayar(items = DummyData.dataPesanan)
         }
 
-        // Panggil ButtonBayar dengan totalBayar yang benar
         ButtonBayar(navController = navController, totalBelanja = totalBelanja.toFloat())
     }
-}
-
-
-@Composable
-fun AlamatEditDialog(
-    currentName: String,
-    currentAddress: String,
-    currentDetail: String,
-    onDismiss: () -> Unit,
-    onSave: (String, String, String) -> Unit
-) {
-    var name by remember { mutableStateOf(TextFieldValue(currentName)) }
-    var address by remember { mutableStateOf(TextFieldValue(currentAddress)) }
-    var detail by remember { mutableStateOf(TextFieldValue(currentDetail)) }
-
-    AlertDialog(
-        onDismissRequest = { onDismiss() },
-        title = {
-            Text(
-                text = "Edit Alamat",
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center
-            )
-        },
-        text = {
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)) {
-                Text("Nama")
-                BasicTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.LightGray, shape = MaterialTheme.shapes.small)
-                        .padding(8.dp)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text("Alamat")
-                BasicTextField(
-                    value = address,
-                    onValueChange = { address = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.LightGray, shape = MaterialTheme.shapes.small)
-                        .padding(8.dp)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text("Detail")
-                BasicTextField(
-                    value = detail,
-                    onValueChange = { detail = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.LightGray, shape = MaterialTheme.shapes.small)
-                        .padding(8.dp)
-                )
-            }
-        },
-        confirmButton = {
-            Button(onClick = {
-                onSave(name.text, address.text, detail.text)
-            }) {
-                Text("Simpan")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Batal")
-            }
-        }
-    )
 }
 
 @Composable
@@ -176,7 +109,7 @@ fun Alamat() {
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
         verticalAlignment = Alignment.Top
     ) {
-        // Ikon Lokasi di Sebelah Kiri
+        // Icon Lokasi
         Icon(
             imageVector = Icons.Default.LocationOn,
             contentDescription = "Location Icon",
@@ -198,7 +131,8 @@ fun Alamat() {
                 Text(
                     text = "Alamat",
                     color = Color.Black,
-                    fontSize = 24.sp,
+                    fontSize = 20.sp,
+                    fontFamily = poppinsFamily,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
                         .weight(1f)
@@ -271,15 +205,150 @@ fun Alamat() {
             currentAddress = currentAddress,
             currentDetail = currentDetail,
             onDismiss = { isEditDialogOpen = false },
-            onSave = { name, address, detail ->
+            onSave = { name, street, kecamatan, city, provinsi, kodePos, detail ->
                 currentName = name
-                currentAddress = address
+                currentAddress = "$street, $kecamatan, $city, $provinsi, $kodePos"
                 currentDetail = detail
                 isEditDialogOpen = false
             }
         )
     }
+
 }
+
+@Composable
+fun AlamatEditDialog(
+    currentName: String,
+    currentAddress: String,
+    currentDetail: String,
+    onDismiss: () -> Unit,
+    onSave: (String, String, String, String, String, String, String) -> Unit
+) {
+    var name by remember { mutableStateOf(TextFieldValue(currentName)) }
+    var street by remember { mutableStateOf(TextFieldValue("")) }
+    var kecamatan by remember { mutableStateOf(TextFieldValue("")) }
+    var city by remember { mutableStateOf(TextFieldValue("")) }
+    var provinsi by remember { mutableStateOf(TextFieldValue("")) }
+    var kodePos by remember { mutableStateOf(TextFieldValue("")) }
+    var detail by remember { mutableStateOf(TextFieldValue(currentDetail)) }
+
+        AlertDialog(
+            onDismissRequest = { onDismiss() },
+            containerColor = bg_card,
+            title = {
+                Text(
+                    text = "Edit Alamat",
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center
+                )
+            },
+            text = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                ) {
+                    Text("Nama")
+                    BasicTextField(
+                        value = name,
+                        onValueChange = { name = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.LightGray, shape = MaterialTheme.shapes.small)
+                            .padding(8.dp)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("Jalan (Street)")
+                    BasicTextField(
+                        value = street,
+                        onValueChange = { street = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.LightGray, shape = MaterialTheme.shapes.small)
+                            .padding(8.dp)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("Kecamatan")
+                    BasicTextField(
+                        value = kecamatan,
+                        onValueChange = { kecamatan = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.LightGray, shape = MaterialTheme.shapes.small)
+                            .padding(8.dp)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("Kota (City)")
+                    BasicTextField(
+                        value = city,
+                        onValueChange = { city = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.LightGray, shape = MaterialTheme.shapes.small)
+                            .padding(8.dp)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("Provinsi")
+                    BasicTextField(
+                        value = provinsi,
+                        onValueChange = { provinsi = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.LightGray, shape = MaterialTheme.shapes.small)
+                            .padding(8.dp)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("Kode Pos")
+                    BasicTextField(
+                        value = kodePos,
+                        onValueChange = { kodePos = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.LightGray, shape = MaterialTheme.shapes.small)
+                            .padding(8.dp)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("Detail")
+                    BasicTextField(
+                        value = detail,
+                        onValueChange = { detail = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.LightGray, shape = MaterialTheme.shapes.small)
+                            .padding(8.dp)
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        onSave(
+                            name.text,
+                            street.text,
+                            kecamatan.text,
+                            city.text,
+                            provinsi.text,
+                            kodePos.text,
+                            detail.text
+                        )
+                    },
+                    colors = ButtonDefaults.buttonColors(button)
+                ) {
+                    Text("Simpan", color = Color.White)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = onDismiss,
+                    colors = ButtonDefaults.textButtonColors(
+                        containerColor = Color.White
+                    )
+                ) {
+                    Text("Batal", color = Color.Black)
+                }
+            }
+        )
+    }
 
 @Composable
 fun PesananItem(item: KeranjangItem) {
@@ -335,9 +404,8 @@ fun PesananItem(item: KeranjangItem) {
 @Composable
 fun DetailBayar(items: List<KeranjangItem>) {
     val totalBayar = items.sumOf { it.price * it.quantity }.toFloat()
-    val courierOptions = listOf("Pilih","JNT", "JNE", "Langsung")
     var expanded by remember { mutableStateOf(false) }
-    val selectedCourier = remember { mutableStateOf(courierOptions[0]) }
+    val selectedCourier = remember { mutableStateOf("Pilih Jasa Kirim") }
 
     Spacer(modifier = Modifier.height(16.dp))
     GarisBatas()
@@ -362,26 +430,7 @@ fun DetailBayar(items: List<KeranjangItem>) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text("Pilih Pengiriman:", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-            Box {
-                Text(
-                    text = selectedCourier.value,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { expanded = true }
-                        .background(Color.LightGray)
-                        .padding(8.dp)
-                )
-                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                    courierOptions.forEach { courier ->
-                        DropdownMenuItem(onClick = {
-                            selectedCourier.value = courier
-                            expanded = false
-                        }) {
-                            Text(text = courier)
-                        }
-                    }
-                }
-            }
+            PilihJasaKirim(selectedCourier, dataDelivery)
         }
     }
     GarisBatas()
@@ -401,6 +450,53 @@ fun DetailBayar(items: List<KeranjangItem>) {
 }
 
 @Composable
+fun PilihJasaKirim(selectedCourier: MutableState<String>, dataDelivery: List<Delivery>) {
+    var showDialog by remember { mutableStateOf(false) }
+    val courierOptions = dataDelivery.map { it.option.toString() }
+
+    Column() {
+        // pilih pengiriman
+        Text(
+            text = selectedCourier.value,
+            modifier = Modifier
+                .width(120.dp)
+                .clickable { showDialog = true }
+                .background(color = bg_card_pesan)
+                .padding(8.dp)
+        )
+
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                title = { Text(text = "Pilih Jasa Kirim") },
+                text = {
+                    Column {
+                        courierOptions.forEach { courier ->
+                            Text(
+                                text = courier,
+                                modifier = Modifier
+                                    .clickable {
+                                        selectedCourier.value = courier // Update pilihan
+                                        showDialog = false // Tutup dialog setelah memilih
+                                    }
+                                    .padding(8.dp)
+                            )
+                        }
+                    }
+                },
+                confirmButton = {
+                    Button(
+                        onClick = { showDialog = false },
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        Text("Tutup")
+                    }
+                }
+            )
+        }
+    }
+}
+@Composable
 fun GarisBatas() {
     Canvas(
         modifier = Modifier
@@ -409,23 +505,22 @@ fun GarisBatas() {
             .padding(horizontal = 16.dp)
     ) {
         val colors = listOf(button, Color.Green) // Dua warna bergantian
-        val segmentWidth = size.width / 2 // Setengah lebar kanvas
+        val segmentWidth = size.width / 2 // Setengah halaman
         var currentX = 0f
         var colorIndex = 0
 
         while (currentX < size.width) {
-            // Hitung panjang segmen: pastikan tidak melewati lebar kanvas
             val endX = (currentX + segmentWidth).coerceAtMost(size.width)
 
             drawLine(
-                color = colors[colorIndex % colors.size], // Warna bergantian
+                color = colors[colorIndex % colors.size],
                 start = Offset(currentX, 0f),
-                end = Offset(endX, 0f), // Akhir segmen
-                strokeWidth = 8f // Ketebalan garis
+                end = Offset(endX, 0f),
+                strokeWidth = 8f
             )
 
-            currentX = endX // Pindah ke awal segmen berikutnya
-            colorIndex++ // Ganti warna
+            currentX = endX
+            colorIndex++
         }
     }
 }
@@ -438,17 +533,16 @@ fun ButtonBayar(navController: NavController, totalBelanja: Float) {
             .fillMaxWidth()
             .height(150.dp)
     ) {
-        // Lapisan blur berwarna di bawah Card
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp)
-                .padding(10.dp) // Atur jarak agar tidak langsung ke tepi
+                .padding(10.dp)
                 .background(
                     button.copy(alpha = 0.3f),
                     shape = RoundedCornerShape(35.dp)
-                ) // Warna blur semi-transparan
-                .blur(20.dp) // Blur dengan radius 20dp
+                )
+                .blur(20.dp)
         )
 
         // Card utama
