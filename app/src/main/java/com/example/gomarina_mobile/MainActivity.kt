@@ -5,7 +5,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,25 +22,31 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            GoMarina_MobileTheme {
-                // Buat NavController
-                val navController = rememberNavController()
 
-                // Panggil layar PembayaranBerhasilScreen
-                PembayaranBerhasilScreen(navController = navController)
-//                MainScreen { goToNextActivity() }
+            GoMarina_MobileTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    GoMarinaApp()
+                }
             }
         }
     }
-
-    private fun goToNextActivity() {
-        val intent = Intent(this, Listpesanan()::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        startActivity(intent)
-        finish()
-    }
 }
+
+@Composable
+fun GoMarinaApp (modifier: Modifier = Modifier) {
+
+}
+
+//    private fun goToNextActivity() {
+//        val intent = Intent(this, ListPesananScreen()::class.java).apply {
+//            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//        }
+//        startActivity(intent)
+//        finish()
+//    }
+//}
 
 
 //@Composable
@@ -157,33 +168,33 @@ class MainActivity : ComponentActivity() {
 //}
 
 
-@Composable
-fun NavigationApp(navController: NavHostController) {
-    NavHost(
-        navController = navController,
-        startDestination = "DetailProduk"
-    ) {
-//        composable("DetailProduk") {
-//            Detail_Product(navController)
+//@Composable
+//fun NavigationApp(navController: NavHostController) {
+//    NavHost(
+//        navController = navController,
+//        startDestination = "DetailProduk"
+//    ) {
+////        composable("DetailProduk") {
+////            Detail_Product(navController)
+////        }
+////        composable("Keranjang") {
+////            KeranjangScreen(navController)
+////        }
+////        composable("DetailPesanan") {
+////            DetailPesananScreen(navController)
+////        }
+////        composable("Pembayaran") {
+////            PembayaranScreen(navController)
+////        }
+////        composable("PembayaranBerhasil") {
+////            PembayaranBerhasilScreen(
+////                onKembaliKeBeranda = { navController.popBackStack("DetailProduk", inclusive = false) },
+////                onPesanan = { navController.navigate("CekPesanan") }
+////            )
+////        }
+//        composable("CekPesanan") {
+//            CekScreen(navController)
 //        }
-//        composable("Keranjang") {
-//            KeranjangScreen(navController)
-//        }
-//        composable("DetailPesanan") {
-//            DetailPesananScreen(navController)
-//        }
-//        composable("Pembayaran") {
-//            PembayaranScreen(navController)
-//        }
-//        composable("PembayaranBerhasil") {
-//            PembayaranBerhasilScreen(
-//                onKembaliKeBeranda = { navController.popBackStack("DetailProduk", inclusive = false) },
-//                onPesanan = { navController.navigate("CekPesanan") }
-//            )
-//        }
-        composable("CekPesanan") {
-            CekScreen(navController)
-        }
-    }
-}
+//    }
+//}
 
