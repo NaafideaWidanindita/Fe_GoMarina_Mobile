@@ -1,5 +1,6 @@
 package com.example.gomarina_mobile.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,50 +29,57 @@ fun ListPesananItem() {
     Surface(
         shape = RoundedCornerShape(16.dp),
         shadowElevation = 6.dp,
+        color = Color.White,
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth()
-            .height(150.dp)
+            .height(170.dp)
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .padding(18.dp)
         ) {
-            Column {
-                Text(
-                    text = "Jambu",
-                    fontFamily = poppinsFamily,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Normal,
-                    modifier = Modifier
-                        .padding(bottom = 4.dp)
-                )
-                Text(
-                    text = "Keripik Jambu",
-                    fontFamily = poppinsFamily,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Normal,
-                    modifier = Modifier
-                        .padding(bottom = 4.dp)
-                )
-                Text(
-                    text = "Jus Jambu",
-                    fontFamily = poppinsFamily,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Normal,
-                    modifier = Modifier
-                        .padding(bottom = 4.dp)
-                )
-                Spacer(modifier = Modifier
-                    .height(16.dp)
-                )
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text(
+                        text = "Jambu",
+                        fontFamily = poppinsFamily,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(bottom = 4.dp)
+                    )
+                    Text(
+                        text = "Keripik Jambu",
+                        fontFamily = poppinsFamily,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(bottom = 4.dp)
+                    )
+                    Text(
+                        text = "Jus Jambu",
+                        fontFamily = poppinsFamily,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(bottom = 4.dp)
+                    )
+                }
                 Row {
                     Text(
                         text = "Total",
                         fontFamily = poppinsFamily,
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
+                        fontWeight = FontWeight.Bold,
                         color = SecondaryColor,
                         modifier = Modifier
                             .padding(bottom = 8.dp)
@@ -83,6 +91,7 @@ fun ListPesananItem() {
                             fontFamily = poppinsFamily,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
+                            color = Color.Black,
                             modifier = Modifier
                                 .padding(bottom = 8.dp)
                         )
@@ -98,7 +107,8 @@ fun ListPesananItem() {
                     text = "20/11/2026",
                     fontFamily = poppinsFamily,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Black,
                 )
                 Button(
                     onClick ={},

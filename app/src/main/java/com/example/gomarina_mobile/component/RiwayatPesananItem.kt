@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -12,6 +13,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,7 +26,10 @@ fun RiwayatPesananItem(){
     Surface(
         shape = RoundedCornerShape(16.dp),
         shadowElevation = 6.dp,
+        color = Color.White,
         modifier = Modifier
+            .padding(16.dp)
+            .height(170.dp)
             .fillMaxWidth(),
     ) {
         Row(
@@ -32,34 +37,41 @@ fun RiwayatPesananItem(){
             modifier = Modifier
                 .padding(18.dp)
         ) {
-            Column {
-                Text(
-                    text = "Jambu",
-                    fontFamily = poppinsFamily,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Normal,
-                    modifier = Modifier
-                        .padding(bottom = 4.dp)
-                )
-                Text(
-                    text = "Keripik Jambu",
-                    fontFamily = poppinsFamily,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Normal,
-                    modifier = Modifier
-                        .padding(bottom = 4.dp)
-                )
-                Text(
-                    text = "Jus Jambu",
-                    fontFamily = poppinsFamily,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Normal,
-                    modifier = Modifier
-                        .padding(bottom = 4.dp)
-                )
-                Spacer(modifier = Modifier
-                    .height(16.dp)
-                )
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text(
+                        text = "Jambu",
+                        fontFamily = poppinsFamily,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(bottom = 4.dp)
+                    )
+                    Text(
+                        text = "Keripik Jambu",
+                        fontFamily = poppinsFamily,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(bottom = 4.dp)
+                    )
+                    Text(
+                        text = "Jus Jambu",
+                        fontFamily = poppinsFamily,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(bottom = 4.dp)
+                    )
+                }
+
                 Row {
                     Text(
                         text = "Total",
@@ -76,6 +88,7 @@ fun RiwayatPesananItem(){
                         fontFamily = poppinsFamily,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
+                        color = Color.Black,
                         modifier = Modifier
                             .padding(bottom = 8.dp)
                     )
@@ -84,6 +97,7 @@ fun RiwayatPesananItem(){
             Text(
                 text = "20/11/2026",
                 fontFamily = poppinsFamily,
+                color = Color.Black,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium
             )

@@ -28,48 +28,40 @@ import com.example.gomarina_mobile.ui.theme.button
 import com.example.gomarina_mobile.ui.theme.profilwar
 import com.example.gomarina_mobile.ui.theme.warnaSec
 
-class ProfileActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            ProfileScreen()
-        }
-    }
-}
 
-@Preview(showBackground = true)
-@Composable
-fun ProfileScreen() {
-    val navController = rememberNavController()
-
-    Scaffold(
-        topBar = {
-            ProfileHeader()
-        },
-        bottomBar = {
-            BottomNavigation(navController = navController)
-        },
-        content = { paddingValues ->
-
-            NavHost(navController = navController, startDestination = "profile") {
-                composable("profile") {
-                    ProfileContent(paddingValues = paddingValues)
-                }
-                composable("Home") {
-
-                }
-                composable("Pesanan") {
-
-                    AppNavigation()
-                }
-                composable("settings") {
-
-                    SettingsScreen(navController)
-                }
-            }
-        }
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun ProfileScreen() {
+//    val navController = rememberNavController()
+//
+//    Scaffold(
+//        topBar = {
+//            ProfileHeader()
+//        },
+//        bottomBar = {
+//            BottomNavigation(navController = navController)
+//        },
+//        content = { paddingValues ->
+//
+//            NavHost(navController = navController, startDestination = "profile") {
+//                composable("profile") {
+//                    ProfileContent(paddingValues = paddingValues)
+//                }
+//                composable("Home") {
+//
+//                }
+//                composable("Pesanan") {
+//
+//                    AppNavigation()
+//                }
+//                composable("settings") {
+//
+//                    SettingsScreen(navController)
+//                }
+//            }
+//        }
+//    )
+//}
 
 @Composable
 fun ProfileHeader() {

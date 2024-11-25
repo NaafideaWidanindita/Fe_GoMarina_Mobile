@@ -25,22 +25,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
-class SettingsActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-
-            val navController = rememberNavController()
-            NavHost(navController = navController, startDestination = "settings") {
-                composable("settings") { SettingsScreen(navController) }
-                composable("Feedback") { FeedbackScreen(navController) }
-                composable("profile") { ProfileScreen() }
-
-            }
-        }
-    }
-}
-
 @Composable
 fun SettingsScreen(navController: NavController) {
     Column(modifier = Modifier.fillMaxSize()) {

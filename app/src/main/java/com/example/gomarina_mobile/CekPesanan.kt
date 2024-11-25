@@ -78,7 +78,7 @@ fun CekPesananScreen(
                 shape = RoundedCornerShape(16.dp),
                 shadowElevation = 6.dp,
                 modifier = Modifier
-                    .padding(horizontal = 30.dp)
+                    .padding(horizontal = 16.dp)
                     .fillMaxWidth()
 
             ) {
@@ -108,7 +108,7 @@ fun CekPesananScreen(
                 shape = RoundedCornerShape(16.dp),
                 shadowElevation = 6.dp,
                 modifier = Modifier
-                    .padding(horizontal = 30.dp)
+                    .padding(horizontal = 16.dp)
                     .fillMaxWidth()
 
             ) {
@@ -117,7 +117,7 @@ fun CekPesananScreen(
                         .padding(18.dp)
                 ) {
                     Text(
-                        text = "Status Pembayaran :",
+                        text = "Status Pengantaran :",
                         fontFamily = poppinsFamily,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Normal,
@@ -125,7 +125,7 @@ fun CekPesananScreen(
                             .padding(bottom = 4.dp)
                     )
                     Text(
-                        text = "Diterima",
+                        text = "Sedang Diantar",
                         fontFamily = poppinsFamily,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,

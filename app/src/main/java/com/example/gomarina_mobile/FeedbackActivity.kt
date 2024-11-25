@@ -28,21 +28,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.gomarina_mobile.ui.theme.*
 
-class FeedbackActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            val navController = rememberNavController()
-            NavHost(navController = navController, startDestination = "feedback") {
-                composable("settings") { SettingsScreen(navController) }
-                composable("feedback") { FeedbackScreen(navController) }
-                composable("profile") { ProfileScreen() }
-                composable("pesanan") { AppNavigation() }
-            }
-        }
-    }
-}
-
 @Composable
 fun StarRating(rating: Float, onRatingChanged: (Float) -> Unit) {
     Row(
