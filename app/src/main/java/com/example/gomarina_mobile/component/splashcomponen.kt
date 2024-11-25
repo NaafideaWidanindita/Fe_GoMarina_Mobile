@@ -37,18 +37,9 @@ fun SplashScreen(activity: ComponentActivity) {
             verticalArrangement = Arrangement.Center
         ) {
             Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = "Splash Image",
-                modifier = Modifier.size(130.dp)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "Go Marina",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = button
+                painter = painterResource(id = R.drawable.newlogo),
+                contentDescription = "Logo",
+                modifier = Modifier.size(180.dp)
             )
         }
     }

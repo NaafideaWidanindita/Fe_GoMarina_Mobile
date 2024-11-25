@@ -1,5 +1,6 @@
 package com.example.gomarina_mobile
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.SnackbarHostState
@@ -20,6 +21,8 @@ import com.example.gomarina_mobile.ui.theme.poppinsFamily
 import com.example.gomarina_mobile.ui.theme.warnaBg
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.res.painterResource
+import com.example.gomarina_mobile.ui.theme.PrimaryColor
 
 @Composable
 fun LoginScreen() {
@@ -44,11 +47,15 @@ fun LoginScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = warnaBg),
+            .background(PrimaryColor),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        WelcomeHeader()
+        Image(
+            painter = painterResource(id = R.drawable.newlogo),
+            contentDescription = "Logo",
+            modifier = Modifier.size(180.dp)
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 

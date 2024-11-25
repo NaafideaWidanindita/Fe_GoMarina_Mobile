@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.sp
 import com.example.gomarina_mobile.component.LoginBox
 import com.example.gomarina_mobile.component.SignBox
 import com.example.gomarina_mobile.component.WelcomeHeader
+import com.example.gomarina_mobile.ui.theme.PrimaryColor
+import com.example.gomarina_mobile.ui.theme.SecondaryColor
 import com.example.gomarina_mobile.ui.theme.poppinsFamily
 import com.example.gomarina_mobile.ui.theme.warnaBg
 
@@ -29,11 +31,15 @@ fun SignUpScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = warnaBg),
+            .background(PrimaryColor),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        WelcomeHeader()
+        Image(
+            painter = painterResource(id = R.drawable.newlogo),
+            contentDescription = "Logo",
+            modifier = Modifier.size(180.dp)
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 

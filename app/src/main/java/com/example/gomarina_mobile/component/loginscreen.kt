@@ -17,6 +17,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gomarina_mobile.ui.theme.SecondaryColor
 import com.example.gomarina_mobile.ui.theme.poppinsFamily
 
 @Composable
@@ -30,7 +31,7 @@ fun LoginBox(
     Surface(
         modifier = Modifier.width(350.dp),
         shape = RoundedCornerShape(percent = 6),
-        border = BorderStroke(2.dp, Color.White),
+        border = BorderStroke(3.dp, color = SecondaryColor),
         shadowElevation = 5.dp,
         color = Color.White.copy(alpha = 0.7f),
     ) {
@@ -107,7 +108,7 @@ fun LoginBox(
             }
             Button(
                 onClick = onLoginClick,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2B4944)),
+                colors = ButtonDefaults.buttonColors(containerColor = SecondaryColor),
                 shape = RoundedCornerShape(percent = 30)
             ) {
                 Text(
