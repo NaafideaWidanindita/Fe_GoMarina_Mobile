@@ -5,18 +5,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-
 @Composable
 fun CekScreen(navController: NavHostController) {
     Column {
         CekHeader(navController)
-        CekContent(navController)
+        CekPesananScreen(navController = navController) // Menggunakan navController yang sudah dideklarasikan
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun CekScreenPreview() {
-    val navController = rememberNavController()
+    val navController = rememberNavController() // Menginisialisasi navController
     CekScreen(navController = navController)
 }

@@ -3,7 +3,7 @@ package com.example.gomarina_mobile.model
 import java.math.BigInteger;
 
 enum class PaymentOption {
-    qris, mandiri
+    mandiri
 }
 
 enum class PaymentStatus {

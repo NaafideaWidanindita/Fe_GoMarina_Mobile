@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,7 +18,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.AlertDialog
@@ -33,6 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,7 +42,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -50,25 +51,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.gomarina_mobile.dummyData.DummyData
 import com.example.gomarina_mobile.dummyData.DummyData.dataDelivery
 import com.example.gomarina_mobile.model.Delivery
 import com.example.gomarina_mobile.model.KeranjangItem
 import com.example.gomarina_mobile.ui.theme.bacground
-import com.example.gomarina_mobile.ui.theme.bg_button
 import com.example.gomarina_mobile.ui.theme.bg_card
 import com.example.gomarina_mobile.ui.theme.bg_card_pesan
 import com.example.gomarina_mobile.ui.theme.button
 import com.example.gomarina_mobile.ui.theme.poppinsFamily
+import androidx.compose.ui.unit.dp
 
 @Composable
-fun PesananContent(navController: NavController) {
+fun PesananContent() {
     val scrollState = rememberScrollState()
-    val totalBelanja = DummyData.dataPesanan.sumOf { it.price * it.quantity }.toFloat()
+    var totalALL by remember { mutableStateOf(0f) }
 
     Column(
         modifier = Modifier
@@ -84,10 +82,11 @@ fun PesananContent(navController: NavController) {
             DummyData.dataPesanan.forEach { item ->
                 PesananItem(item = item)
             }
-            DetailBayar(items = DummyData.dataPesanan)
+            DetailBayar(items = DummyData.dataPesanan, onTotalChanged = { total ->
+                totalALL = total
+            })
+            PembayaranContent()
         }
-
-        ButtonBayar(navController = navController, totalBelanja = totalBelanja.toFloat())
     }
 }
 
@@ -126,11 +125,11 @@ fun Alamat() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Alamat",
+                    text = "Alamat Pengiriman",
                     color = Color.Black,
                     fontSize = 20.sp,
                     fontFamily = poppinsFamily,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Medium,
                     modifier = Modifier
                         .weight(1f)
                         .padding(top = 5.dp)
@@ -155,7 +154,7 @@ fun Alamat() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Nama: $currentName",
+                        text = "$currentName | 08587897089",
                         color = Color.Black,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Medium,
@@ -170,7 +169,7 @@ fun Alamat() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Alamat: $currentAddress",
+                        text = "$currentAddress",
                         color = Color.Black,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Medium,
@@ -185,7 +184,7 @@ fun Alamat() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Detail: $currentDetail",
+                        text = "($currentDetail)",
                         color = Color.Black,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Medium,
@@ -194,6 +193,7 @@ fun Alamat() {
             }
         }
     }
+
     GarisBatas()
     Spacer(modifier = Modifier.height(16.dp))
     if (isEditDialogOpen) {
@@ -396,43 +396,49 @@ fun PesananItem(item: KeranjangItem) {
             )
         }
     }
+
+
 }
 
 @Composable
-fun DetailBayar(items: List<KeranjangItem>) {
+fun DetailBayar(items: List<KeranjangItem>, onTotalChanged: (Float) -> Unit) {
     val totalBayar = items.sumOf { it.price * it.quantity }.toFloat()
-    var expanded by remember { mutableStateOf(false) }
-    val selectedCourier = remember { mutableStateOf("Pilih Jasa Kirim") }
-
-    Spacer(modifier = Modifier.height(16.dp))
-    GarisBatas()
-
-    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-        // Total Belanja
+    val selectedCourier = remember { mutableStateOf("Pilih") }
+    val selectedOngkir = remember { mutableStateOf(0f) } // Default ongkir 0
+    val totalALL = totalBayar + selectedOngkir.value
+    LaunchedEffect(totalALL) {
+        onTotalChanged(totalALL) // Kirim totalALL ke PesananScreen
+    }
+    Column(modifier = Modifier.padding(16.dp)) {
+        // Total Pesanan
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("Total Belanja:", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            Text("Total Pesanan:", fontSize = 16.sp, fontWeight = FontWeight.Bold)
             Text("Rp$totalBayar", fontSize = 16.sp, fontWeight = FontWeight.Bold)
         }
 
-        // Pilih Pengiriman
+        // Total Pengiriman
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("Pilih Pengiriman:", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-            PilihJasaKirim(selectedCourier, dataDelivery)
+            Text("Pilih Jasa Kirim:", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            PilihJasaKirim(
+                selectedCourier = selectedCourier,
+                dataDelivery = dataDelivery,
+                selectedOngkir = selectedOngkir
+            )
         }
-    }
-    GarisBatas()
-    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-        // Total Pembayaran
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Divider(color = Color.Gray, thickness = 1.dp)
+        Spacer(modifier = Modifier.height(16.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -440,27 +446,39 @@ fun DetailBayar(items: List<KeranjangItem>) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text("Total Pembayaran:", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-            Text("Rp$totalBayar", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            Text("Rp$totalALL", fontSize = 16.sp, fontWeight = FontWeight.Bold)
         }
-        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
 @Composable
-fun PilihJasaKirim(selectedCourier: MutableState<String>, dataDelivery: List<Delivery>) {
+fun PilihJasaKirim(
+    selectedCourier: MutableState<String>,
+    dataDelivery: List<Delivery>,
+    selectedOngkir: MutableState<Float>
+) {
     var showDialog by remember { mutableStateOf(false) }
-    val courierOptions = dataDelivery.map { it.option.toString() }
+    val courierOptions = dataDelivery.map { "${it.option.name.capitalize()} - Rp ${it.ongkir}" }
 
-    Column() {
-        // pilih pengiriman
-        Text(
-            text = selectedCourier.value,
+    Column {
+        Row(
             modifier = Modifier
-                .width(120.dp)
+                .width(88.dp)
                 .clickable { showDialog = true }
-                .background(color = bg_card_pesan)
-                .padding(8.dp)
-        )
+                .background(bacground),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = selectedCourier.value,
+                modifier = Modifier.weight(1f),
+                fontSize = 14.sp
+            )
+            Icon(
+                imageVector = Icons.Default.ArrowForward,
+                contentDescription = "Pilih jasa kirim",
+                tint = Color.Gray
+            )
+        }
 
         if (showDialog) {
             AlertDialog(
@@ -468,24 +486,23 @@ fun PilihJasaKirim(selectedCourier: MutableState<String>, dataDelivery: List<Del
                 title = { Text(text = "Pilih Jasa Kirim") },
                 text = {
                     Column {
-                        courierOptions.forEach { courier ->
+                        dataDelivery.forEach { courier ->
                             Text(
-                                text = courier,
+                                text = "${courier.option.name.capitalize()} - Rp ${courier.ongkir}",
                                 modifier = Modifier
                                     .clickable {
-                                        selectedCourier.value = courier // Update pilihan
-                                        showDialog = false // Tutup dialog setelah memilih
+                                        selectedCourier.value = courier.option.name
+                                        selectedOngkir.value =
+                                            courier.ongkir.toFloat() // Update nilai ongkir
+                                        showDialog = false
                                     }
-                                    .padding(8.dp)
+                                    .padding(vertical = 4.dp)
                             )
                         }
                     }
                 },
                 confirmButton = {
-                    Button(
-                        onClick = { showDialog = false },
-                        modifier = Modifier.padding(8.dp)
-                    ) {
+                    Button(onClick = { showDialog = false }) {
                         Text("Tutup")
                     }
                 }
@@ -493,6 +510,7 @@ fun PilihJasaKirim(selectedCourier: MutableState<String>, dataDelivery: List<Del
         }
     }
 }
+
 @Composable
 fun GarisBatas() {
     Canvas(
@@ -522,73 +540,8 @@ fun GarisBatas() {
     }
 }
 
-
-@Composable
-fun ButtonBayar(navController: NavController, totalBelanja: Float) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(150.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp)
-                .padding(10.dp)
-                .background(
-                    button.copy(alpha = 0.3f),
-                    shape = RoundedCornerShape(35.dp)
-                )
-                .blur(20.dp)
-        )
-
-        // Card utama
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp),
-            shape = RoundedCornerShape(topStart = 35.dp, topEnd = 35.dp),
-            colors = CardDefaults.cardColors(containerColor = bg_button),
-            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp) // Elevasi diatur 0 karena kita sudah menggunakan blur
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(bacground, shape = RoundedCornerShape(20.dp))
-                        .padding(12.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(text = "Total :", color = Color.Black, fontSize = 18.sp)
-                    Text(text = "Rp${totalBelanja}", color = Color.Black, fontSize = 18.sp)
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = { navController.navigate("com/example/gomarina_mobile/component/Pembayaran") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = button)
-                ) {
-                    Text(
-                        text = "Bayar",
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
-                }
-            }
-        }
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 fun PesananContentPreview() {
-    val navController = rememberNavController()
-    PesananContent(navController = navController)
+    PesananContent()
 }
