@@ -24,30 +24,6 @@ import com.example.gomarina_mobile.ui.theme.PrimaryColor
 
 @Composable
 fun LoginScreen(navController: NavController) {
-    var username by remember { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-    var loginError by remember { mutableStateOf(false) }
-
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    fun handleLogin() {
-        val user = dummyUsers.find { it.username == username && it.password == password }
-        loginError = user == null
-
-        if (!loginError) {
-            // Navigate to the "beranda" screen after a successful login
-            navController.navigate("beranda")
-        }
-    }
-
-    LaunchedEffect(loginError) {
-        if (loginError) {
-            snackbarHostState.showSnackbar("Username or password is incorrect")
-        } else {
-            snackbarHostState.showSnackbar("Login successful")
-        }
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -64,26 +40,8 @@ fun LoginScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         LoginBox(
-            username = username,
-            password = password,
-            onUsernameChange = { username = it },
-            onPasswordChange = { password = it },
-            onLoginClick = { navController.navigate("beranda") },
             navController = navController
         )
-
-
-
-        if (loginError) {
-            Snackbar(
-                modifier = Modifier.padding(8.dp),
-                containerColor = Color.Red,
-                contentColor = Color.White,
-                actionContentColor = Color.White
-            ) {
-                Text(text = "Incorrect username or password", fontSize = 14.sp)
-            }
-        }
     }
 }
 
