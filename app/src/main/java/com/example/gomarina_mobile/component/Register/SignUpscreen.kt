@@ -3,6 +3,8 @@ package com.example.gomarina_mobile.component.Register
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -18,13 +20,12 @@ import com.example.gomarina_mobile.ui.theme.PrimaryColor
 
 @Composable
 fun SignUpScreen(navController: NavController) {
-    var username by remember { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-
+    val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(PrimaryColor),
+            .background(PrimaryColor)
+            .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -36,17 +37,11 @@ fun SignUpScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        SignBox(
-            username = username,
-            password = password,
-            onUsernameChange = { username = it },
-            onPasswordChange = { password = it },
-            onSignUpClick = { navController.navigate("login") },
-            navController = navController
-        )
+        SignBox(navController = navController)
+
     }
 }
-@Preview(showBackground = true, widthDp = 400, heightDp = 800)
+@Preview(showBackground = true)
 @Composable
 fun PreviewSignUpScreen() {
     SignUpScreen(navController = rememberNavController())
