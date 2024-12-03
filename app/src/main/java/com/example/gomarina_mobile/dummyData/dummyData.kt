@@ -16,7 +16,7 @@ object DummyData {
             id = 1,
             name = "Jambu",
             description = "Deskripsi produk A yang sangat menarik.",
-            price = BigDecimal(50000),
+            price = BigDecimal(32000),
             stok = 100,
             image = R.drawable.jambu
         ),
@@ -41,7 +41,7 @@ object DummyData {
             name = "Eskrim Jambu",
             image = R.drawable.eskrimjambu,
             description = "Eskrim Jambu Bikin Tenggorokan Adem ",
-            price = BigDecimal("20000"),
+            price = BigDecimal("10000"),
             stok = 100
         ),
         Produk(
@@ -56,8 +56,8 @@ object DummyData {
 
     val dataKeranjangItems = listOf(
         KeranjangItem(id = 1, name = "Jambu", price = 32000, image = R.drawable.jambu),
-        KeranjangItem(id = 2, name = "Mangga", price = 25000, image = R.drawable.jambu),
-        KeranjangItem(id = 3, name = "Apel", price = 15000, image = R.drawable.jambu),
+        KeranjangItem(id = 2, name = "Selai Jambu", price = 25000, image = R.drawable.selaijambu),
+        KeranjangItem(id = 3, name = "Eskrim Jambu", price = 10000, image = R.drawable.eskrimjambu),
         KeranjangItem(id = 4, name = "Rambutan", price = 32000, image = R.drawable.jambu),
         KeranjangItem(id = 5, name = "Angga", price = 25000, image = R.drawable.jambu),
         KeranjangItem(id = 6, name = "Rina", price = 15000, image = R.drawable.jambu),
@@ -70,20 +70,20 @@ object DummyData {
 
     val dataPesanan = listOf(
         KeranjangItem(id = 1, name = "Jambu", quantity = 1, price = 32000, image = R.drawable.jambu),
-        KeranjangItem(id = 2, name = "Mangga", quantity = 2,price = 25000, image = R.drawable.jambu),
-        KeranjangItem(id = 3, name = "Apel", quantity = 7,price = 15000, image = R.drawable.jambu),
+        KeranjangItem(id = 2, name = "Selai Jambu", quantity = 2,price = 25000, image = R.drawable.selaijambu),
+        KeranjangItem(id = 3, name = "Eskrim Jambu", quantity = 7,price = 10000, image = R.drawable.eskrimjambu),
     )
 
     val dataAddress = listOf(
         Address(
             id = 1,
             role_id = BigInteger.valueOf(1),
-            provinsi = "Jawa Barat",
-            city = "Bandung",
-            kecamatan = "Coblong",
-            kode_pos = 40132,
-            street = "Jl. Dago No. 123",
-            detail = "Rumah warna hijau dekat taman"
+            provinsi = "Kepulauan Riau",
+            city = "Batam",
+            kecamatan = "Batu Aji",
+            kode_pos = 29424,
+            street = "Jl. Letjend Suprapto No. 45",
+            detail = "Rumah warna biru dekat pasar"
         ),
         Address(
             id = 2,
@@ -133,18 +133,21 @@ object DummyData {
             id = 1,
             order_id = BigInteger("10001"),
             option = DeliveryOption.jnt,  // Memilih pengiriman JNT
+            ongkir = 10000,
             status = DeliveryStatus.dikirim  // Status pengiriman adalah dikirim
         ),
         Delivery(
             id = 2,
             order_id = BigInteger("10002"),
             option = DeliveryOption.jne,  // Memilih pengiriman JNE
+            ongkir = 20000,
             status = DeliveryStatus.dikirim  // Status pengiriman adalah dikemas
         ),
         Delivery(
             id = 3,
             order_id = BigInteger("10003"),
             option = DeliveryOption.langsung,
+            ongkir = 25000,
             status = DeliveryStatus.dikirim
         )
         )

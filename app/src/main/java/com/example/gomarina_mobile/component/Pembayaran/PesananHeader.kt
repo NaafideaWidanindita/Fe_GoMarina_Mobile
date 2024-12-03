@@ -20,7 +20,7 @@ import com.example.gomarina_mobile.ui.theme.GoMarina_MobileTheme
 @Composable
 fun PesananHeader(navController: NavHostController) {
     TopAppBar(
-        title = { Text("Detail pesanan", color = Color.Black) },
+        title = { Text("Pesanan", color = Color.Black) },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = bacground
         ),
