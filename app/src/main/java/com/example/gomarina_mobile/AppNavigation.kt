@@ -35,7 +35,7 @@ import com.example.gomarina_mobile.component.Feedback.FeedbackScreen
 import com.example.gomarina_mobile.component.Keranjang.KeranjangScreen
 import com.example.gomarina_mobile.component.ListPesanan.ListPesananScreen
 import com.example.gomarina_mobile.component.Login.LoginScreen
-import com.example.gomarina_mobile.component.Pembayaran.PembayaranScreen
+import com.example.gomarina_mobile.component.Pembayaran.PesananScreen
 import com.example.gomarina_mobile.component.SplashScreen.SplashComponent
 import com.example.gomarina_mobile.component.Product.ProductScreen
 import com.example.gomarina_mobile.component.Pembayaran.PesananScreen
@@ -116,7 +116,7 @@ fun AppNavigation() {
             composable("pesanan") { PesananScreen(navController = navController) }
             composable("riwayatpesanan") { RiwayatPesananScreen(navController = navController) }
             composable("keranjang") { KeranjangScreen(navController = navController) }
-            composable("Pembayaran") { PembayaranScreen(navController = navController) }
+            composable("Pembayaran") { PesananScreen(navController = navController) }
             composable("berhasil") { PembayaranBerhasilScreen(navController = navController) }
             composable("Listpesanan") { ListPesananScreen(navController = navController) }
             composable("Cek") { CekScreen(navController = navController) }
