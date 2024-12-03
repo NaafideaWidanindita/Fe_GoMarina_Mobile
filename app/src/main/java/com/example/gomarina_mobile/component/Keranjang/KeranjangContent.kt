@@ -285,7 +285,7 @@ fun ButtonCheckout(
                 fontWeight = FontWeight.Medium
             )
             Button(
-                onClick = { navController.navigate("DetailPesanan") },
+                onClick = { navController.navigate("pesanan") },
                 colors = ButtonDefaults.buttonColors(containerColor = button),
                 shape = RoundedCornerShape(0.dp),
                 modifier = Modifier

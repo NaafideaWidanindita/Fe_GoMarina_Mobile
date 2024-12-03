@@ -568,7 +568,7 @@ fun ButtonBayar(navController: NavController, totalBelanja: Float) {
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
-                    onClick = { navController.navigate("com/example/gomarina_mobile/component/Pembayaran") },
+                    onClick = { navController.navigate("berhasil") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),

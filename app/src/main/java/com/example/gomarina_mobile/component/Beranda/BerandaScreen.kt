@@ -25,7 +25,7 @@ fun Beranda (
         modifier = Modifier
             .background(bacground)
     ) {
-        TopBar()
+        TopBar(navController = navController)
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -45,3 +45,6 @@ private fun BerandaPrev() {
     Beranda(navController = NavController(LocalContext.current),
         produk = DummyData.dataProduk)
 }
+
+
+

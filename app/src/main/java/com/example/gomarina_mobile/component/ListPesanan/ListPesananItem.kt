@@ -19,11 +19,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.gomarina_mobile.ui.theme.SecondaryColor
 import com.example.gomarina_mobile.ui.theme.poppinsFamily
 
 @Composable
-fun ListPesananItem() {
+fun ListPesananItem(navController: NavController) {
     Surface(
         shape = RoundedCornerShape(16.dp),
         shadowElevation = 6.dp,
@@ -109,7 +111,7 @@ fun ListPesananItem() {
                     color = Color.Black,
                 )
                 Button(
-                    onClick ={},
+                    onClick ={navController.navigate("Cek")},
                     modifier = Modifier
                         .height(35.dp)
                         .padding(start = 16.dp),
@@ -136,6 +138,7 @@ fun ListPesananItem() {
 @Preview
 @Composable
 private fun ListPesananPrev() {
-    ListPesananItem()
+    val navController = rememberNavController()
+    ListPesananItem(navController = navController)
 
 }

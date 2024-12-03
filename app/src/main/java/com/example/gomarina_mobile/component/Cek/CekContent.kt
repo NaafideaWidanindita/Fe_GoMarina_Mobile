@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.gomarina_mobile.R
@@ -36,12 +37,12 @@ fun CekContent(navController: NavHostController) {
             .fillMaxSize()
             .background(bacground)
     ) {
-        CekPesanan()
+        CekPesanan(navController = navController)
     }
 }
 
 @Composable
-fun CekPesanan(){
+fun CekPesanan(navController: NavController){
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -72,7 +73,7 @@ fun CekPesanan(){
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
-                    onClick = { /* Aksi Cek Resi */ },
+                    onClick = { navController.navigate("CekPesanan") },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6CE9BF))
                 ) {
                     Text(text = "CEK RESI", color = Color.Black)

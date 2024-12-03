@@ -30,9 +30,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun TopBar() {
+fun TopBar(navController: NavController) {
     var text by remember { mutableStateOf("") }
 //    var active by remember { mutableStateOf(false) }
 
@@ -77,7 +79,7 @@ fun TopBar() {
         ) {
             IconButton(
                 onClick = {
-                    println("Cart icon clicked")
+                    navController.navigate("keranjang")
                 },
 
                 ) {
@@ -90,8 +92,9 @@ fun TopBar() {
     }
 }
 
-@Preview (showBackground = true)
+@Preview(showBackground = true)
 @Composable
-private fun TopBarPrev() {
-    TopBar()
+fun TopBarPreview() {
+    val navController = rememberNavController()
+    TopBar(navController = navController)
 }

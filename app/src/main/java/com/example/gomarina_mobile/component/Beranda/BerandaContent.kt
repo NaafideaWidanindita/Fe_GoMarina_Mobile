@@ -38,7 +38,8 @@ import java.util.Locale
 fun BerandaContent (
     modifier: Modifier = Modifier,
     produk: Produk,
-    onItemClick:(Int) -> Unit
+    onItemClick:(Int) -> Unit,
+    
 ) {
     val formattedPrice = NumberFormat.getNumberInstance(Locale("id", "ID")).format(produk.price)
 
@@ -60,7 +61,7 @@ fun BerandaContent (
                     .padding(bottom = 8.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .fillMaxWidth()
-                    .clickable { onItemClick(produk.id) },
+                    .clickable { onItemClick(produk.id) }, // Navigasi menggunakan produk ID
                 painter = painterResource(id = produk.image),
                 contentDescription = produk.name,
                 contentScale = ContentScale.Crop,

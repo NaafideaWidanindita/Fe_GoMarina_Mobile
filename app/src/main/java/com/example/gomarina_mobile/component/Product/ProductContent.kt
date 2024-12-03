@@ -188,7 +188,7 @@ fun ProdukJumlah(quantity: Int, onQuantityChange: (Int) -> Unit) {
 @Composable
 fun AddKeranjangButton(navController: NavHostController) {
     Button(
-        onClick = { navController.navigate("com/example/gomarina_mobile/component/Keranjang") },
+        onClick = { navController.navigate("Keranjang") },
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp),
