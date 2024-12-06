@@ -38,7 +38,7 @@ fun SplashComponent(navController: NavController) {
     }
 
     LaunchedEffect(Unit) {
-        delay(3000)
+        delay(1500)
         navController.navigate("login")
     }
 }

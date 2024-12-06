@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -17,15 +18,26 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.gomarina_mobile.R
+import com.example.gomarina_mobile.component.BottomNavigationBar
 
 @Composable
 fun SettingsScreen(navController: NavController) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        BackButton(navController)
-        TitleSection()
-        UserProfileSection(navController = navController)
-        FeedbackSection(navController)
-        Spacer(modifier = Modifier.weight(1f))
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(navController = navController)
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            BackButton(navController)
+            TitleSection()
+            UserProfileSection(navController = navController)
+            FeedbackSection(navController)
+            Spacer(modifier = Modifier.weight(1f))
+        }
     }
 }
 

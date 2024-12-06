@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
+import com.example.gomarina_mobile.component.BottomNavigationBar
 import com.example.gomarina_mobile.component.RiwayatPesanan.RiwayatPesananScreen
 import com.example.gomarina_mobile.ui.theme.PrimaryColor
 import com.example.gomarina_mobile.ui.theme.bacground
@@ -29,64 +30,72 @@ import com.example.gomarina_mobile.ui.theme.poppinsFamily
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListPesananScreen(
-    navController: NavController) {
+    navController: NavController
+) {
     var selectedTab by remember { mutableStateOf("List Pesanan") }
 
-    Column(
-        modifier = Modifier
-            .background(PrimaryColor)
-            .fillMaxHeight()
-    ) {
-        TopAppBar(
-            title = { Text("Pesanan", color = Color.Black) },
-            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = bacground
-            ),
-            navigationIcon = {
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = null, tint = Color.Black)
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(navController = navController)
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .background(PrimaryColor)
+                .fillMaxHeight()
+                .padding(paddingValues)
+        ) {
+            TopAppBar(
+                title = { Text("Pesanan", color = Color.Black) },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = bacground
+                ),
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = null, tint = Color.Black)
+                    }
+                }
+            )
+
+            Row(
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                TabItem("List Pesanan", isSelected = selectedTab == "List Pesanan") {
+                    selectedTab = "List Pesanan"
+                }
+                TabItem("Riwayat Pesanan", isSelected = selectedTab == "Riwayat Pesanan") {
+                    selectedTab = "Riwayat Pesanan"
                 }
             }
-        )
 
-        Row(
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            TabItem("List Pesanan", isSelected = selectedTab == "List Pesanan") {
-                selectedTab = "List Pesanan"
-            }
-            TabItem("Riwayat Pesanan", isSelected = selectedTab == "Riwayat Pesanan") {
-                selectedTab = "Riwayat Pesanan"
-            }
-        }
+            Divider(
+                modifier = Modifier
+                    .width(500.dp)
+                    .padding(horizontal = 30.dp),
+                thickness = 1.dp,
+                color = Color.Black
+            )
 
-        Divider(modifier = Modifier
-            .width(500.dp)
-            .padding(horizontal = 30.dp),
-            thickness = 1.dp,
-            color = Color.Black
-        )
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (selectedTab == "List Pesanan") {
-            LazyColumn(
-                contentPadding = PaddingValues(horizontal = 6.dp ),
-            ){
-               items(5){
-                   ListPesananItem(navController = navController)
-               }
-            }
-
-        } else {
-            LazyColumn(
-                contentPadding = PaddingValues(horizontal = 6.dp ),
-            ) {
-                items(2){
-                    RiwayatPesananScreen(navController = navController)
+            if (selectedTab == "List Pesanan") {
+                LazyColumn(
+                    contentPadding = PaddingValues(horizontal = 6.dp),
+                ) {
+                    items(5) {
+                        ListPesananItem(navController = navController)
+                    }
+                }
+            } else {
+                LazyColumn(
+                    contentPadding = PaddingValues(horizontal = 6.dp),
+                ) {
+                    items(2) {
+                        RiwayatPesananScreen(navController = navController)
+                    }
                 }
             }
         }

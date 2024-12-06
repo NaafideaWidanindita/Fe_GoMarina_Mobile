@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -17,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -83,6 +85,7 @@ fun ProdukImage(imageRes: Int) {
             .fillMaxWidth()
             .aspectRatio(6/5f)
             .padding(vertical = 10.dp)
+            .clip(RoundedCornerShape(16.dp))
     )
 }
 
@@ -208,6 +211,6 @@ fun AddKeranjangButton(navController: NavHostController) {
 @Composable
 fun ProdukContentPreview() {
     val navController = rememberNavController()
-    val produk = DummyData.dataProduk[0]
+    val produk = DummyData.dataProduk[2]
     ProdukContent(navController = navController, produk = produk)
 }

@@ -47,24 +47,23 @@ fun BerandaContent (
         modifier = modifier
             .padding(16.dp)
             .width(200.dp)
-            .height(220.dp),
+            .height(220.dp)
+            .clickable { onItemClick(produk.id) }, // Navigasi di sini untuk seluruh Column
         shape = RoundedCornerShape(16.dp),
         shadowElevation = 4.dp,
         color = Color.White
-    ){
+    ) {
         Column(
-            Modifier
-                .padding(10.dp)
+            Modifier.padding(10.dp)
         ) {
             Image(
                 modifier = Modifier
                     .padding(bottom = 8.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .fillMaxWidth()
-                    .clickable { onItemClick(produk.id) }, // Navigasi menggunakan produk ID
+                    .fillMaxWidth(),
                 painter = painterResource(id = produk.image),
                 contentDescription = produk.name,
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Crop
             )
             Row(
                 modifier = Modifier
@@ -98,16 +97,17 @@ fun BerandaContent (
             }
         }
     }
+
 }
 
 @Preview
 @Composable
 private fun BerandaContentPrev() {
-        BerandaContent(
-            produk = Produk(1,"Jambu",
-                R.drawable.buahsatu,"Buah Jambu Yang Manis", BigDecimal("32000"),100),
-            onItemClick ={produkId ->
-                println("Produk id: $produkId")
-            }
-        )
-    }
+    BerandaContent(
+        produk = Produk(1,"Jambu",
+            R.drawable.buahsatu,"Buah Jambu Yang Manis", BigDecimal("32000"),100),
+        onItemClick ={produkId ->
+            println("Produk id: $produkId")
+        }
+    )
+}

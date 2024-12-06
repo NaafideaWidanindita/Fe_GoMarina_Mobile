@@ -1,14 +1,21 @@
 package com.example.gomarina_mobile.component.Feedback
 
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.gomarina_mobile.component.BottomNavigationBar
 
 @Composable
 fun MainFeedbackScreen(navController: NavHostController) {
-    FeedbackScreen(navController = navController)
-
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(navController = navController)
+        }
+    ) {
+        FeedbackScreen(navController = navController)
+    }
 }
 
 @Preview(showBackground = true)
