@@ -38,7 +38,7 @@ fun Beranda(
         modifier = Modifier
             .background(bacground)
     ) {
-        TopBar()
+        TopBar(navController = navController)
 
         // Ini buat nyoba apa datanya dah kesimpen
         Text(
@@ -71,3 +71,6 @@ private fun BerandaPrev() {
     Beranda(navController = NavController(LocalContext.current),
         produk = DummyData.dataProduk)
 }
+
+
+

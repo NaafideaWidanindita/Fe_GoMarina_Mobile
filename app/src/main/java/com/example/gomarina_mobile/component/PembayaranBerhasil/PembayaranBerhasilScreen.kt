@@ -9,7 +9,7 @@ import androidx.navigation.compose.rememberNavController
 fun PembayaranBerhasilScreen(navController: NavHostController) {
 
         PembayaranBerhasilHeader(navController = navController)
-        PembayaranBerhasilContent()
+        PembayaranBerhasilContent(navController = navController)
 }
 
 @Preview(showBackground = true)

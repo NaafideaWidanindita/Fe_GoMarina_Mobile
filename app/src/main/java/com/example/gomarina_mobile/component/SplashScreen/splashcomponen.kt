@@ -37,9 +37,8 @@ fun SplashComponent(navController: NavController) {
         }
     }
 
-    // Navigasi ke LoginScreen setelah delay
     LaunchedEffect(Unit) {
-        delay(3000)  // Wait for 3 seconds
+        delay(3000)
         navController.navigate("login")
     }
 }

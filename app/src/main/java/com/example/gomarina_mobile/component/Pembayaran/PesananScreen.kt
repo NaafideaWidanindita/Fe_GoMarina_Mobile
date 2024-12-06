@@ -48,7 +48,7 @@ fun PesananScreen(navController: NavHostController) {
             modifier = Modifier
                 .weight(1f)
         ) {
-            PesananContent()
+            PesananContent(navController = navController)
     }
         ButtonPembayaran(totalALL = totalALL)
     }

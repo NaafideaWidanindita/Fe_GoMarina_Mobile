@@ -77,7 +77,7 @@ fun ListPesananScreen(
                 contentPadding = PaddingValues(horizontal = 6.dp ),
             ){
                items(5){
-                   ListPesananItem()
+                   ListPesananItem(navController = navController)
                }
             }
 

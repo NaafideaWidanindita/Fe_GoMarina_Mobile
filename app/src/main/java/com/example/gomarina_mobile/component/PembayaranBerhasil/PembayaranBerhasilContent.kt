@@ -26,19 +26,21 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 import java.text.SimpleDateFormat
 import java.util.Date
 
 @Composable
-fun PembayaranBerhasilContent() {
+fun PembayaranBerhasilContent(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(bacground),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Content(modifier = Modifier.weight(1f))
+        Content(modifier = Modifier.weight(1f), navController = navController)
         Spacer(modifier = Modifier.height(16.dp))
         Footer()
     }
@@ -69,7 +71,7 @@ fun AnimatedTuingTuingIcon() {
 }
 
 @Composable
-fun Content(modifier: Modifier = Modifier) {
+fun Content(modifier: Modifier = Modifier, navController: NavController) {
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -93,7 +95,7 @@ fun Content(modifier: Modifier = Modifier) {
             color = Color.Black
         )
         Spacer(modifier = Modifier.height(32.dp))
-        ButtonNav()
+        ButtonNav(navController )
     }
 }
 
@@ -104,7 +106,7 @@ fun getCurrentTime(): String {
 }
 
 @Composable
-fun ButtonNav() {
+fun ButtonNav(navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -112,7 +114,7 @@ fun ButtonNav() {
         horizontalArrangement = Arrangement.spacedBy(30.dp)
     ) {
         Button(
-            onClick = { /* TODO: Tambahkan aksi */ },
+            onClick = { navController.navigate("Beranda") },
             colors = ButtonDefaults.buttonColors(containerColor = button), // Mengatur warna tombol
             modifier = Modifier.weight(1.01f)
         ) {
@@ -126,7 +128,7 @@ fun ButtonNav() {
         }
 
         Button(
-            onClick = { /* TODO: Tambahkan aksi */ },
+            onClick = { navController.navigate("Listpesanan") },
             colors = ButtonDefaults.buttonColors(containerColor = button), // Mengatur warna tombol
             modifier = Modifier.weight(1f)
         ) {
@@ -163,5 +165,6 @@ fun Footer() {
 @Preview(showBackground = true)
 @Composable
 fun PembayaranBerhasilContentPreview() {
-    PembayaranBerhasilContent()
+    val navController = rememberNavController()
+    PembayaranBerhasilContent(navController = navController)
 }

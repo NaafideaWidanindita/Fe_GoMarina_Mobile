@@ -49,7 +49,7 @@ fun FeedbackScreen(navController: NavController) {
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
-        Text(text = "com/example/gomarina_mobile/component/Feedback", fontSize = 29.sp, color = textColorPrimary)
+        Text(text = "Feedback", fontSize = 29.sp, color = textColorPrimary)
         Spacer(modifier = Modifier.height(8.dp))
         Text(text = "Berikan penilaian anda", fontSize = 18.sp, color = textColorPrimary)
 

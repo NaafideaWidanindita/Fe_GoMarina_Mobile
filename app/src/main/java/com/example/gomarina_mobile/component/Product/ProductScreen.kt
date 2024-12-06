@@ -8,7 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.gomarina_mobile.dummyData.DummyData
 
 @Composable
-fun ProductScreen(navController: NavHostController) {
+fun ProductScreen(navController: NavHostController, produkId: Int) {
     val produk = DummyData.dataProduk[0] // Ambil produk pertama
     Column {
         ProdukHeader(navController) // Header berada di atas
@@ -16,9 +16,4 @@ fun ProductScreen(navController: NavHostController) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun ProductScreenPreview() {
-    val navController = rememberNavController()
-    ProductScreen(navController = navController)
-}
+

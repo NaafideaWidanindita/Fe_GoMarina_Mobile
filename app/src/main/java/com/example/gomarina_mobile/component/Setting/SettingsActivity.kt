@@ -23,7 +23,7 @@ fun SettingsScreen(navController: NavController) {
     Column(modifier = Modifier.fillMaxSize()) {
         BackButton(navController)
         TitleSection()
-        UserProfileSection()
+        UserProfileSection(navController = navController)
         FeedbackSection(navController)
         Spacer(modifier = Modifier.weight(1f))
     }
@@ -64,12 +64,12 @@ fun TitleSection() {
 @Composable
 fun FeedbackSection(navController: NavController) {
     TextButton(
-        onClick = { navController.navigate("feedback") },
+        onClick = { navController.navigate("Feedback") },
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        Text(text = "com/example/gomarina_mobile/component/Feedback", fontSize = 18.sp, color = Color.Black)
+        Text(text = "Feedback", fontSize = 18.sp, color = Color.Black)
         Image(
             painter = painterResource(id = R.drawable.ic_arrow_right_24),
             contentDescription = "Lanjutkan ke Feedback",
