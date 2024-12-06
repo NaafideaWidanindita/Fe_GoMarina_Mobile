@@ -1,4 +1,6 @@
 package com.example.gomarina_mobile.component.Login
+
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
@@ -59,7 +61,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
-
 
 @Composable
 fun LoginBox(navController: NavController) {
@@ -213,7 +214,7 @@ fun LoginBox(navController: NavController) {
 fun loginUser(
     username: String,
     password: String,
-    context: android.content.Context,
+    context: Context,
     navController: NavController,
     onSuccess: () -> Unit,
     onError: (String) -> Unit
@@ -233,8 +234,25 @@ fun loginUser(
         try {
             val response = client.newCall(request).execute()
             val message = response.body?.string()
-            Log.d("Respon :","$message")
-            if (response.isSuccessful) {
+
+            if (response.isSuccessful && message != null) {
+                val jsonResponse = JSONObject(message)
+
+                Log.d("Respon :","$jsonResponse")
+                // Ambil data user yg login
+                val userObject = jsonResponse.getJSONObject("user")
+                val userId = userObject.getInt("id")
+                val userUsername = userObject.getString("username")
+                val userRole = userObject.getString("role")
+
+                // Simpan data ke SharedPreferences
+                val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putInt("id", userId)
+                editor.putString("username", userUsername)
+                editor.putString("role", userRole)
+                editor.apply()
+
                 CoroutineScope(Dispatchers.Main).launch {
                     Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
                     onSuccess()
@@ -242,8 +260,12 @@ fun loginUser(
                 }
             } else {
                 CoroutineScope(Dispatchers.Main).launch {
-                    val jsonResponse = JSONObject(message)
-                    val errorMessage = jsonResponse.getString("message")
+                    val errorMessage = if (message != null) {
+                        val jsonResponse = JSONObject(message)
+                        jsonResponse.optString("message", "Unknown Error")
+                    } else {
+                        "Unknown Error"
+                    }
                     onError(errorMessage)
                     Toast.makeText(context, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
                 }
