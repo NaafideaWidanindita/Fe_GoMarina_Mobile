@@ -43,7 +43,6 @@ fun AppNavigation() {
         composable("riwayatpesanan") { RiwayatPesananScreen(navController = navController) }
         composable("riwayatpesanan") { RiwayatPesananScreen(navController = navController) }
         composable("keranjang") { KeranjangScreen(navController = navController) }
-        composable("Pembayaran") { PesananScreen(navController = navController) }
         composable("berhasil") { PembayaranBerhasilScreen(navController = navController) }
         composable("listpesanan") { ListPesananScreen(navController = navController) }
         composable("Cek") { CekScreen(navController = navController) }

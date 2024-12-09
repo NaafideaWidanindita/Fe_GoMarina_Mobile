@@ -48,14 +48,14 @@ fun PesananScreen(navController: NavHostController) {
             modifier = Modifier
                 .weight(1f)
         ) {
-            PesananContent(navController = navController)
-    }
+            PesananContent()
+        }
         ButtonPembayaran(totalALL = totalALL)
     }
 }
 
 @Composable
-fun ButtonPembayaran(totalALL: Double) { // Menerima totalALL sebagai parameter
+fun ButtonPembayaran(totalALL: Double) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
