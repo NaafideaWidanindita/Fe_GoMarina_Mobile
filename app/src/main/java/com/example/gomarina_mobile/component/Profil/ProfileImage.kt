@@ -15,8 +15,7 @@ import com.example.gomarina_mobile.R
 
 @Composable
 fun ProfileImage(
-    imageRes: Int = R.drawable.jambu, // Default resource
-    backgroundColor: Color = Color.White,
+    imageRes: Int = R.drawable.profile, // Default resource
     imageSize: Int = 80
 ) {
     Image(
@@ -25,7 +24,6 @@ fun ProfileImage(
         modifier = Modifier
             .size(imageSize.dp)
             .clip(CircleShape)
-            .background(backgroundColor)
     )
 }
 

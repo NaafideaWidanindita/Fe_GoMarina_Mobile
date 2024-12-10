@@ -1,9 +1,11 @@
 package com.example.gomarina_mobile.component.Profil
 
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -12,6 +14,7 @@ import com.example.gomarina_mobile.component.BottomNavigationBar
 
 @Composable
 fun ProfileScreen(navController: NavHostController) {
+    val context = LocalContext.current
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController = navController)
@@ -26,7 +29,7 @@ fun ProfileScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            ProfileContent(paddingValues = PaddingValues(0.dp))
+            ProfileContent(context = context)
         }
     }
 }
@@ -42,3 +45,5 @@ fun ProfilePreview() {
     val navController = rememberNavController()
     MainProfileScreen(navController)
 }
+
+

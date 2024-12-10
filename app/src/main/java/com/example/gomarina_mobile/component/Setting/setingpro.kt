@@ -1,5 +1,6 @@
 package com.example.gomarina_mobile.component.Setting
 
+import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -8,6 +9,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.Text
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -16,10 +18,13 @@ import com.example.gomarina_mobile.component.Profil.ProfileImage
 
 @Composable
 fun UserProfileSection(
-    name: String = "Arifandi",
-    profileImageRes: Int = R.drawable.ic_profile,
     navController: NavController
 ) {
+
+    val context = LocalContext.current
+    val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+    val userName = sharedPreferences.getString("username", "Pengguna")
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -32,14 +37,16 @@ fun UserProfileSection(
             modifier = Modifier
                 .wrapContentHeight()
         ) {
+
             Text(
-                text = name,
+                text = userName ?: "Pengguna",
                 fontSize = 18.sp,
                 color = Color.Black,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
+
             TextButton(
-                onClick = { navController.navigate("profile") }, // Navigasi ke halaman profil
+                onClick = { navController.navigate("profile") },
                 modifier = Modifier.padding(bottom = 4.dp)
             ) {
                 Text(

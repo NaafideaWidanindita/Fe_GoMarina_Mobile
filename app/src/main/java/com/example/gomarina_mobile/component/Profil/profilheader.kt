@@ -1,5 +1,6 @@
 package com.example.gomarina_mobile.component.Profil
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -19,13 +21,13 @@ import com.example.gomarina_mobile.R
 import com.example.gomarina_mobile.ui.theme.profilwar
 
 @Composable
-@Preview(showBackground = true)
-fun ProfileHeaderPreview() {
-    ProfileHeader()
-}
-
-@Composable
 fun ProfileHeader() {
+    val context = LocalContext.current
+    val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+    val userName = sharedPreferences.getString("username", "Pengguna")
+    val password = sharedPreferences.getString("password", "password") ?: "password"
+    val telp = sharedPreferences.getString("telp", "telp") ?: "telp"
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -36,7 +38,10 @@ fun ProfileHeader() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        IconButton(onClick = { /* kode buat back */ }, modifier = Modifier.align(Alignment.Start)) {
+        IconButton(
+            onClick = { /* kode buat back */ },
+            modifier = Modifier.align(Alignment.Start)
+        ) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_arrow_back_24),
                 contentDescription = "Back",
@@ -46,14 +51,21 @@ fun ProfileHeader() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-
         ProfileImage()
 
         Spacer(modifier = Modifier.height(8.dp))
+
+
         Text(
-            text = "ARIFANDI",
+            text = userName ?: "Pengguna",
             color = Color.White,
             style = MaterialTheme.typography.h5
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ProfileHeaderPreview() {
+    ProfileHeader()
 }

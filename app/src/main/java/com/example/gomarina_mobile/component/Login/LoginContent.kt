@@ -244,6 +244,11 @@ fun loginUser(
                 val userId = userObject.getInt("id")
                 val userUsername = userObject.getString("username")
                 val userRole = userObject.getString("role")
+                val userTelp = userObject.getString("telp")
+                val userPassword = userObject.getString("password")
+
+
+
 
                 // Simpan data ke SharedPreferences
                 val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
@@ -251,6 +256,8 @@ fun loginUser(
                 editor.putInt("id", userId)
                 editor.putString("username", userUsername)
                 editor.putString("role", userRole)
+                editor.putString("telp", userTelp)
+                editor.putString("password", userPassword)
                 editor.apply()
 
                 CoroutineScope(Dispatchers.Main).launch {
@@ -286,3 +293,4 @@ fun PreviewLoginBox() {
     val navController = rememberNavController()
     LoginBox(navController = navController)
 }
+
