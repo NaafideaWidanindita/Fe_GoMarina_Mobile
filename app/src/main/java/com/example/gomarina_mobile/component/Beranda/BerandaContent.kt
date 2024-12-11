@@ -149,6 +149,7 @@ fun fetchProducts(onResult: (List<Produk>?, String) -> Unit) {
                             id = productObject.getInt("id"),
                             name = productObject.getString("name"),
                             image = productObject.optString("image", "0").toIntOrNull() ?:0,
+                            imageUrl = productObject.getString("imageUrl"),
                             description = productObject.getString("description"),
                             stok = productObject.optInt("stok",0),
                             price = productObject.optString("price", "0").toBigDecimalOrNull() ?: BigDecimal.ZERO

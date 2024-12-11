@@ -59,13 +59,11 @@ import java.math.BigDecimal
 @Composable
 fun ProdukContent(navController: NavHostController, productId: Int) {
     var produk by remember { mutableStateOf<Produk?>(null) }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
-    var imageUrl by remember { mutableStateOf("") } // Menambahkan state untuk imageUrl
+    val errorMessage by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(productId) {
-        ProductDetail(id = productId) { result, imageUrlFromApi ->
+        ProductDetail(id = productId) { result ->
             produk = result
-            imageUrl = imageUrlFromApi
         }
     }
 
@@ -87,7 +85,7 @@ fun ProdukContent(navController: NavHostController, productId: Int) {
                         .verticalScroll(rememberScrollState())
                         .padding(bottom = 80.dp)
                 ) {
-                    ProdukImage(imageURL = imageUrl) // Menggunakan imageUrl dari API response
+                    ProdukImage(imageURL = produk!!.imageUrl) // Menggunakan imageUrl dari API response
                     ProdukDetails(produk = produk!!)
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -267,7 +265,7 @@ fun AddKeranjangButton(navController: NavHostController) {
 
 fun ProductDetail(
     id: Int,
-    onResult: (Produk, String) -> Unit
+    onResult: (Produk) -> Unit
 ) {
     val client = OkHttpClient()
     val request = Request.Builder()
@@ -283,18 +281,18 @@ fun ProductDetail(
             if (response.isSuccessful) {
                 val jsonObject = JSONObject(responseData)
                 val productObject = jsonObject.getJSONObject("data")
-                val imageUrl = jsonObject.optString("imageUrl", "")
                 val product = Produk(
                     id = productObject.getInt("id"),
                     name = productObject.getString("name"),
                     image = productObject.optString("image", "0").toIntOrNull() ?:0,
+                    imageUrl = productObject.optString("imageUrl"),
                     description = productObject.getString("description"),
                     stok = productObject.optInt("stok", 0),
                     price = productObject.optString("price", "0").toBigDecimalOrNull() ?: BigDecimal.ZERO
                 )
-                Log.d("IMAGEURL","$imageUrl")
-                Log.d("PRODUK","$product")
-                onResult(product, imageUrl) // Mengirimkan product dan imageUrl ke hasil callback
+                Log.d("PRODUKDETAIL","$product")
+                Log.d("ProdukImage", "imageURL: ${product.imageUrl}")
+                onResult(product) // Mengirimkan product dan imageUrl ke hasil callback
             } else {
                 Log.d("EROR","${response.message}")
             }
