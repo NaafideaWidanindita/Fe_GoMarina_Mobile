@@ -60,7 +60,7 @@ fun BerandaContent (
             .width(200.dp)
             .height(220.dp)
             .clickable {
-                Log.d("BerandaContent", "Produk Diklik: ${produk.name}")
+                Log.d("BerandaContent", "Produk Diklik: ${produk.id}")
                 onItemClick(produk.id) },
         shape = RoundedCornerShape(16.dp),
         shadowElevation = 4.dp,
@@ -74,7 +74,7 @@ fun BerandaContent (
                 painterResource(id = produk.image)
             } else {
                 // Jika tidak ada gambar, gunakan gambar default
-                painterResource(R.drawable.buahsatu)
+                painterResource(R.drawable.noimage)
             }
 
             Image(

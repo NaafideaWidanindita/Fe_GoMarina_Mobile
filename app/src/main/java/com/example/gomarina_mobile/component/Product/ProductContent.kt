@@ -1,17 +1,32 @@
 package com.example.gomarina_mobile.component.Product
 
-import androidx.compose.foundation.Image
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,73 +35,116 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.example.gomarina_mobile.dummyData.DummyData
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.example.gomarina_mobile.R
 import com.example.gomarina_mobile.model.Produk
 import com.example.gomarina_mobile.ui.theme.bacground
 import com.example.gomarina_mobile.ui.theme.button
 import com.example.gomarina_mobile.ui.theme.poppinsFamily
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
 import java.math.BigDecimal
 
 @Composable
-fun ProdukContent(navController: NavHostController, produk: Produk) {
-    var quantity by remember { mutableStateOf(1) } // quantity yang dapat diubah
+fun ProdukContent(navController: NavHostController, productId: Int) {
+    var produk by remember { mutableStateOf<Produk?>(null) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+    var imageUrl by remember { mutableStateOf("") } // Menambahkan state untuk imageUrl
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(bacground)
-    )
-    {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(bottom = 80.dp,)
-        ) {
-            ProdukImage(imageRes = produk.image)
-            ProdukDetails(produk)
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 5.dp, horizontal = 20.dp)
-            ) {
-                ProdukJumlah(quantity) { quantity = it } // Mengubah jumlah
-                ProdukHarga(harga = produk.price, quantity = quantity) // Mengupdate harga
-            }
+    LaunchedEffect(productId) {
+        ProductDetail(id = productId) { result, imageUrlFromApi ->
+            produk = result
+            imageUrl = imageUrlFromApi
         }
+    }
 
-        // Tombol "Masukkan Keranjang" tetap di bagian bawah
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .padding(16.dp)
-        ) {
-            AddKeranjangButton(navController = navController)
+    Box(modifier = Modifier.fillMaxSize().background(bacground)) {
+        when {
+            errorMessage != null -> {
+                Text(
+                    text = errorMessage!!,
+                    color = Color.Red,
+                    modifier = Modifier.align(Alignment.Center),
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            produk != null -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(bottom = 80.dp)
+                ) {
+                    ProdukImage(imageURL = imageUrl) // Menggunakan imageUrl dari API response
+                    ProdukDetails(produk = produk!!)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 5.dp, horizontal = 20.dp)
+                    ) {
+                        var quantity by remember { mutableStateOf(1) }
+                        ProdukJumlah(quantity = quantity) { quantity = it }
+                        ProdukHarga(harga = produk!!.price, quantity = quantity)
+                    }
+                }
+
+                // Tombol "Masukkan Keranjang" tetap di bagian bawah
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter)
+                        .padding(16.dp)
+                ) {
+                    AddKeranjangButton(navController = navController)
+                }
+            }
         }
     }
 }
 
-
 @Composable
-fun ProdukImage(imageRes: Int) {
-    Image(
-        painter = painterResource(id = imageRes),
-        contentDescription = null,
+fun ProdukImage(imageURL: String) {
+    val imageRequest = if (imageURL.isNotEmpty()) {
+        ImageRequest.Builder(LocalContext.current)
+            .data(imageURL.replace("localhost", "10.0.2.2"))
+            .crossfade(true)
+            .build()
+    } else {
+        ImageRequest.Builder(LocalContext.current)
+            .data(R.drawable.noimage)
+            .crossfade(true)
+            .build()
+    }
+
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(6/5f)
-            .padding(vertical = 10.dp)
-            .clip(RoundedCornerShape(16.dp))
-    )
+            .aspectRatio(1f)
+            .clip(RoundedCornerShape(8.dp))
+    ) {
+        AsyncImage(
+            model = imageRequest,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        )
+    }
 }
 
 @Composable
@@ -207,10 +265,50 @@ fun AddKeranjangButton(navController: NavHostController) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ProdukContentPreview() {
-    val navController = rememberNavController()
-    val produk = DummyData.dataProduk[2]
-    ProdukContent(navController = navController, produk = produk)
+fun ProductDetail(
+    id: Int,
+    onResult: (Produk, String) -> Unit
+) {
+    val client = OkHttpClient()
+    val request = Request.Builder()
+        .url("http://10.0.2.2:5000/api/v1/products/$id") // Pastikan ID dikirim dengan benar di URL
+        .build()
+    Log.d("ID","$id")
+    val scope = CoroutineScope(Dispatchers.IO)
+    scope.launch {
+        try {
+            val response = client.newCall(request).execute()
+            val responseData = response.body?.string() ?: ""
+
+            if (response.isSuccessful) {
+                val jsonObject = JSONObject(responseData)
+                val productObject = jsonObject.getJSONObject("data")
+                val imageUrl = jsonObject.optString("imageUrl", "")
+                val product = Produk(
+                    id = productObject.getInt("id"),
+                    name = productObject.getString("name"),
+                    image = productObject.optString("image", "0").toIntOrNull() ?:0,
+                    description = productObject.getString("description"),
+                    stok = productObject.optInt("stok", 0),
+                    price = productObject.optString("price", "0").toBigDecimalOrNull() ?: BigDecimal.ZERO
+                )
+                Log.d("IMAGEURL","$imageUrl")
+                Log.d("PRODUK","$product")
+                onResult(product, imageUrl) // Mengirimkan product dan imageUrl ke hasil callback
+            } else {
+                Log.d("EROR","${response.message}")
+            }
+
+        } catch (e: Exception) {
+            Log.d("REQUEST FAILED","${e.message}")
+        }
+    }
 }
+
+//@Preview(showBackground = true)
+//@Composable
+//fun ProdukContentPreview() {
+//    val navController = rememberNavController()
+//    val produk = DummyData.dataProduk[2]
+//    ProdukContent(navController = navController, productId = produk)
+//}

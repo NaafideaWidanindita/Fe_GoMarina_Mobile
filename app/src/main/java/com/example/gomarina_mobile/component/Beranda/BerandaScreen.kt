@@ -64,18 +64,6 @@ fun Beranda(
         ) {
             TopBar(navController = navController)
 
-//            // Display user info
-//            Text(
-//                text = "Selamat datang, $userUsername!",
-//                style = MaterialTheme.typography.headlineMedium,
-//                modifier = Modifier.padding(horizontal = 16.dp)
-//            )
-//            Text(
-//                text = "Role: $userRole",
-//                style = MaterialTheme.typography.bodySmall,
-//                modifier = Modifier.padding(horizontal = 16.dp)
-//            )
-
             // Display loading, error, or products
             when {
                 isLoading.value -> {
