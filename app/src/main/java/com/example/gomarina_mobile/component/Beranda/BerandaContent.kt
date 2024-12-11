@@ -42,6 +42,8 @@ import java.math.BigDecimal
 import android.content.Context
 import android.util.Log
 import androidx.compose.ui.platform.LocalContext
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 
 @Composable
 fun BerandaContent (
@@ -53,6 +55,18 @@ fun BerandaContent (
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
     val formattedPrice = NumberFormat.getNumberInstance(Locale("id", "ID")).format(produk.price)
+
+    val imageRequest  = if (produk.imageUrl.isNotEmpty()) {
+        ImageRequest.Builder(LocalContext.current)
+            .data(produk.imageUrl.replace("localhost", "10.0.2.2"))
+            .crossfade(true)
+            .build()
+    } else {
+        ImageRequest.Builder(LocalContext.current)
+            .data(R.drawable.noimage)
+            .crossfade(true)
+            .build()
+    }
 
     Surface(
         modifier = modifier
@@ -69,24 +83,18 @@ fun BerandaContent (
         Column(
             Modifier.padding(10.dp)
         ) {
-            val imageResource = if (produk.image != 0) {
-                // Mengambil gambar berdasarkan ID atau URL
-                painterResource(id = produk.image)
-            } else {
-                // Jika tidak ada gambar, gunakan gambar default
-                painterResource(R.drawable.noimage)
-            }
-
-            Image(
+            AsyncImage(
+                model = imageRequest,
+                contentDescription = null,
                 modifier = Modifier
                     .padding(bottom = 8.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .height(140.dp)
                     .fillMaxWidth(),
-                painter = imageResource,
-                contentDescription = produk.name,
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(R.drawable.noimage),
             )
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
