@@ -1,5 +1,6 @@
 package com.example.gomarina_mobile.component.Beranda
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,69 +33,78 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.gomarina_mobile.ui.theme.button
 
 @Composable
-fun TopBar(navController: NavController) {
+fun TopBar(navController: NavController, onSearch: (String) -> Unit) {
     var text by remember { mutableStateOf("") }
-//    var active by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .padding(top = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .background(button)
     ) {
-        Spacer(
+        Row (
             modifier = Modifier
-                .height(100.dp)
-        )
-        TextField(
-            value = text,
-            onValueChange = { text = it },
-            shape = RoundedCornerShape(percent = 50),
-            modifier = Modifier
-                .weight(1f)
-                .padding(end = 8.dp),
-            placeholder = {
-                Text(text = "Search")
-            },
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-            ),
-            textStyle = TextStyle(fontSize = 16.sp),
-            trailingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.Search, contentDescription = "Search")
-            }
-        )
-        Surface(
-            modifier = Modifier
-                .size(50.dp)
-                .shadow(5.dp, shape = CircleShape)
-                .padding(start = 5.dp),
-            shape = CircleShape,
-            shadowElevation = 10.dp
-        ) {
-            IconButton(
-                onClick = {
-                    navController.navigate("keranjang")
+                .padding(horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Spacer(
+                modifier = Modifier
+                    .height(85.dp)
+            )
+            TextField(
+                value = text,
+                onValueChange = { query ->
+                    text = query
+                    onSearch(query) // Memanggil onSearch saat teks pencarian berubah
                 },
-
+                shape = RoundedCornerShape(percent = 20),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp),
+                placeholder = {
+                    Text(text = "Search")
+                },
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
+                ),
+                textStyle = TextStyle(fontSize = 16.sp),
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Search, contentDescription = "Search")
+                }
+            )
+            Surface(
+                modifier = Modifier
+                    .size(50.dp)
+                    .shadow(5.dp, shape = CircleShape)
+                    .padding(start = 5.dp),
+                shape = CircleShape,
+                shadowElevation = 10.dp,
+                color = Color.White
+            ) {
+                IconButton(
+                    onClick = {
+                        navController.navigate("keranjang")
+                    },
                 ) {
-                Icon(
-                    imageVector = Icons.Outlined.ShoppingCart,
-                    contentDescription = "Cart",
-                )
+                    Icon(
+                        imageVector = Icons.Outlined.ShoppingCart,
+                        contentDescription = "Cart",
+                    )
+                }
             }
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun TopBarPreview() {
-    val navController = rememberNavController()
-    TopBar(navController = navController)
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun TopBarPreview() {
+//    val navController = rememberNavController()
+//    TopBar(navController = navController)
+//}

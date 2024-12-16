@@ -42,6 +42,7 @@ import java.math.BigDecimal
 import android.content.Context
 import android.util.Log
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 
@@ -71,7 +72,6 @@ fun BerandaContent (
     Surface(
         modifier = modifier
             .padding(16.dp)
-            .width(200.dp)
             .height(220.dp)
             .clickable {
                 Log.d("BerandaContent", "Produk Diklik: ${produk.id}")
@@ -181,13 +181,13 @@ fun fetchProducts(onResult: (List<Produk>?, String) -> Unit) {
 }
 
 
-//@Preview
-//@Composable
-//private fun BerandaContentPrev() {
-//    BerandaContent(
-//        produk = Produk(1,"Jambu",,"Buah Jambu Yang Manis", BigDecimal("32000"),100),
-//        onItemClick ={produkId ->
-//            println("Produk id: $produkId")
-//        }
-//    )
-//}
+@Preview
+@Composable
+private fun BerandaContentPrev() {
+    BerandaContent(
+        produk = Produk(1,"Jambu",0,"drawable.","Buah Jambu Yang Manis", BigDecimal("32000"),100),
+        onItemClick ={produkId ->
+            println("Produk id: $produkId")
+        }
+    )
+}

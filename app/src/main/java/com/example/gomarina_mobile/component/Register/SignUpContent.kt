@@ -61,7 +61,7 @@ fun SignBox(navController: NavController) {
 
     Surface(
         modifier = Modifier
-            .width(350.dp),
+            .width(300.dp),
         shape = RoundedCornerShape(percent = 6),
         border = BorderStroke(3.dp, color = SecondaryColor),
         color = Color.White,
