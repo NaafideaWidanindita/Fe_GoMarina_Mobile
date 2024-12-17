@@ -1,9 +1,8 @@
-package com.example.gomarina_mobile.component.Beranda
+package com.example.gomarina_mobile.component.Favorite
 
 import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.background
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,15 +26,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.gomarina_mobile.component.Beranda.BerandaContent
+import com.example.gomarina_mobile.component.Beranda.TopBar
 import com.example.gomarina_mobile.component.BottomNavigationBar
 import com.example.gomarina_mobile.dummyData.DummyData
 import com.example.gomarina_mobile.model.Produk
 import com.example.gomarina_mobile.ui.theme.bacground
-import java.text.NumberFormat
-import java.util.Locale
+import java.math.BigDecimal
 
 @Composable
-fun Beranda(
+fun FavoriteScreen(
     navController: NavHostController,
     produk: List<Produk> = emptyList()
 ) {
@@ -47,15 +48,15 @@ fun Beranda(
 
     Log.d("UserData", "ID: $userId, Username: $userUsername, Role: $userRole")
 
-    val productsState = remember { mutableStateOf(produk) }
+    val productsFavState = remember { mutableStateOf(produk) }
     val filteredProducts = remember { mutableStateOf(produk) } // untuk menyimpan produk yang sudah difilter
     val isLoading = remember { mutableStateOf(true) }
     val errorMessage = remember { mutableStateOf<String?>(null) }
     var searchText by remember { mutableStateOf("") } // untuk menyimpan teks pencarian
 
-    fetchProducts { products, error ->
+    fetchFavoriteProducts { products, error ->
         if (products != null) {
-            productsState.value = products
+            productsFavState.value = products
             filteredProducts.value = products // menampilkan semua produk saat pertama kali
             isLoading.value = false
             Log.d("Beranda", "Produk berhasil diambil: $products")
@@ -69,9 +70,9 @@ fun Beranda(
     // Filter berdasar pencarian
     val filterProducts = { query: String ->
         filteredProducts.value = if (query.isEmpty()) {
-            productsState.value
+            productsFavState.value
         } else {
-            productsState.value.filter {
+            productsFavState.value.filter {
                 it.name.contains(query, ignoreCase = true)
             }
         }
@@ -88,7 +89,7 @@ fun Beranda(
                 .padding(paddingValues)
                 .background(bacground)
         ) {
-            TopBar(navController = navController, onSearch = { query ->
+            TopFavorite(navController = navController, onSearch = { query ->
                 searchText = query
                 filterProducts(query) // Menjalankan fungsi filter ketika ada perubahan input
             })
@@ -133,12 +134,21 @@ fun Beranda(
     }
 }
 
-//@Preview (showBackground = true)
-//@Composable
-//private fun BerandaPrev() {
-//    Beranda(navController = NavController(LocalContext.current),
-//        produk = DummyData.dataProduk)
-//}
+@Preview(showBackground = true)
+@Composable
+fun FavoriteScreenPreview() {
+    val navController = rememberNavController()
 
+    // Data mock sederhana untuk produk
+    val produkList = listOf(
+        Produk(id = 1, name = "Produk 1", price = BigDecimal(32000), description = "dua", image = 0, imageUrl = "http://localhost:5000/product/1733978839250.png", stok = 3, isFavorite = false),
+        Produk(id = 2, name = "Produk 2", price = BigDecimal(32000), description = "dua", image = 0, imageUrl = "http://localhost:5000/product/1733978839250.png", stok = 3, isFavorite = false),
+        Produk(id = 3, name = "Produk 3", price = BigDecimal(32000), description = "dua", image = 0, imageUrl = "http://localhost:5000/product/1733978839250.png", stok = 3, isFavorite = false),
+        Produk(id = 4, name = "Produk 4", price = BigDecimal(32000), description = "dua", image = 0, imageUrl = "http://localhost:5000/product/1733978839250.png", stok = 3, isFavorite = false)
+    )
 
-
+    FavoriteScreen(
+        navController = navController,
+        produk = produkList
+    )
+}

@@ -1,4 +1,4 @@
-package com.example.gomarina_mobile.component.Beranda
+package com.example.gomarina_mobile.component.Favorite
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
@@ -54,7 +54,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.FormBody
 
 @Composable
-fun BerandaContent (
+fun FavoriteContent (
     modifier: Modifier = Modifier,
     produk: Produk,
     onItemClick:(Int) -> Unit,
@@ -178,23 +178,21 @@ fun BerandaContent (
                 ) {
                     Icon(
                         imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                        contentDescription = "com/example/gomarina_mobile/component/Favorite",
+                        contentDescription = "Favorite",
                         tint = if (isFavorite) Color.Red else Color.Gray
                     )
                 }
-
             }
         }
     }
 }
-
 @Composable
 @SuppressLint("CoroutineCreationDuringComposition")
-fun fetchProducts(onResult: (List<Produk>?, String) -> Unit) {
+fun fetchFavoriteProducts(onResult: (List<Produk>?, String) -> Unit) {
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
     val userId = sharedPreferences.getInt("id", 0)
-    Log.d("USERID","$userId")
+    Log.d("USERID", "$userId")
     val url = "http://10.0.2.2:5000/api/v1/products?role_id=$userId" // Menambahkan role_id ke URL
 
     val client = OkHttpClient()
@@ -222,14 +220,18 @@ fun fetchProducts(onResult: (List<Produk>?, String) -> Unit) {
                         val product = Produk(
                             id = productObject.getInt("id"),
                             name = productObject.getString("name"),
-                            image = productObject.optString("image", "0").toIntOrNull() ?:0,
+                            image = productObject.optString("image", "0").toIntOrNull() ?: 0,
                             imageUrl = productObject.getString("imageUrl"),
                             description = productObject.getString("description"),
-                            stok = productObject.optInt("stok",0),
+                            stok = productObject.optInt("stok", 0),
                             price = productObject.optString("price", "0").toBigDecimalOrNull() ?: BigDecimal.ZERO,
                             isFavorite = productObject.optBoolean("isFavorite")
                         )
-                        products.add(product)
+
+                        // Filter produk yang hanya isFavorite = true
+                        if (product.isFavorite) {
+                            products.add(product)
+                        }
                     }
                     onResult(products, "Success")
                 } else {
@@ -250,7 +252,7 @@ fun fetchProducts(onResult: (List<Produk>?, String) -> Unit) {
 @Preview
 @Composable
 private fun BerandaContentPrev() {
-    BerandaContent(
+    FavoriteContent(
         produk = Produk(1,"Jambu",0,"drawable.","Buah Jambu Yang Manis", BigDecimal("32000"),100),
         onItemClick ={produkId ->
             println("Produk id: $produkId")

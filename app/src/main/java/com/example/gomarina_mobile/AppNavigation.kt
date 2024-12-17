@@ -2,6 +2,7 @@ package com.example.gomarina_mobile
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -9,6 +10,7 @@ import androidx.navigation.navArgument
 import com.example.gomarina_mobile.component.Beranda.Beranda
 import com.example.gomarina_mobile.component.Cek.CekPesananScreen
 import com.example.gomarina_mobile.component.Cek.CekScreen
+import com.example.gomarina_mobile.component.Favorite.FavoriteScreen
 import com.example.gomarina_mobile.component.Feedback.FeedbackScreen
 import com.example.gomarina_mobile.component.Keranjang.KeranjangScreen
 import com.example.gomarina_mobile.component.ListPesanan.ListPesananScreen
@@ -43,6 +45,7 @@ fun AppNavigation() {
         composable("riwayatpesanan") { RiwayatPesananScreen(navController = navController) }
         composable("riwayatpesanan") { RiwayatPesananScreen(navController = navController) }
         composable("keranjang") { KeranjangScreen(navController = navController) }
+        composable("favorite"){ FavoriteScreen(navController = navController)}
         composable("berhasil") { PembayaranBerhasilScreen(navController = navController) }
         composable("listpesanan") { ListPesananScreen(navController = navController) }
         composable("Cek") { CekScreen(navController = navController) }

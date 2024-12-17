@@ -9,5 +9,6 @@ data class Produk(
     val imageUrl: String,
     val description: String,
     val price: BigDecimal,
-    val stok: Int
+    val stok: Int,
+    var isFavorite: Boolean = false
 )

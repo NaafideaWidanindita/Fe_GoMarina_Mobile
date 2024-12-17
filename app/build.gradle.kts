@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
 
     implementation("com.google.accompanist:accompanist-flowlayout:0.30.1")
+    implementation(libs.volley)
     val composeBom = platform("androidx.compose:compose-bom:2024.09.00")
     implementation(composeBom)
 

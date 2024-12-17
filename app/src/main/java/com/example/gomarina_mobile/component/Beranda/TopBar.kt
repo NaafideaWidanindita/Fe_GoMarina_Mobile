@@ -1,23 +1,23 @@
 package com.example.gomarina_mobile.component.Beranda
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,7 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,68 +42,159 @@ fun TopBar(navController: NavController, onSearch: (String) -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .background(button)
+            .padding(vertical = 10.dp, horizontal = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row (
+        Spacer(
             modifier = Modifier
-                .padding(horizontal = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            Spacer(
-                modifier = Modifier
-                    .height(85.dp)
-            )
-            TextField(
+                .height(70.dp)
+        )
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .background(Color.White, shape = RoundedCornerShape(10.dp))
+                .height(42.dp)
+                .padding(top = 12.dp, bottom = 12.dp, start = 16.dp, end = 8.dp)
+        ) {
+            BasicTextField(
                 value = text,
                 onValueChange = { query ->
                     text = query
-                    onSearch(query) // Memanggil onSearch saat teks pencarian berubah
+                    onSearch(query)
                 },
-                shape = RoundedCornerShape(percent = 20),
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 8.dp),
-                placeholder = {
-                    Text(text = "Search")
-                },
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White
-                ),
-                textStyle = TextStyle(fontSize = 16.sp),
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Search, contentDescription = "Search")
-                }
+                textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
+                singleLine = true,
+                modifier = Modifier.fillMaxSize()
             )
-            Surface(
-                modifier = Modifier
-                    .size(50.dp)
-                    .shadow(5.dp, shape = CircleShape)
-                    .padding(start = 5.dp),
-                shape = CircleShape,
-                shadowElevation = 10.dp,
-                color = Color.White
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(
-                    onClick = {
-                        navController.navigate("keranjang")
-                    },
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.ShoppingCart,
-                        contentDescription = "Cart",
+                if (text.isEmpty()) {
+                    Text(
+                        text = "Search",
+                        color = Color.Gray,
+                        style = TextStyle(fontSize = 16.sp),
+                        modifier = Modifier.weight(1f)
                     )
                 }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Icon(
+                    imageVector = Icons.Filled.Search,
+                    contentDescription = "Search"
+                )
             }
+
+        }
+        IconButton(
+            onClick = {
+                navController.navigate("keranjang")
+            },
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .size(25.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.ShoppingCart,
+                contentDescription = "Cart",
+                tint = Color.White,
+                modifier = Modifier.size(25.dp)
+            )
+        }
+        IconButton(
+            onClick = {
+                navController.navigate("favorite")
+            },
+            modifier = Modifier
+                .padding(0.dp)
+                .size(25.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.FavoriteBorder,
+                contentDescription = "Favorite",
+                tint = Color.White,
+                modifier = Modifier
+                      // Pastikan ikon mengisi IconButton sepenuhnya
+                    .padding(0.dp)
+            )
         }
     }
 }
 
-//@Preview(showBackground = true)
 //@Composable
-//fun TopBarPreview() {
-//    val navController = rememberNavController()
-//    TopBar(navController = navController)
+//fun TopBar(navController: NavController, onSearch: (String) -> Unit) {
+//    var text by remember { mutableStateOf("") }
+//
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .background(button)
+//            .padding(horizontal = 8.dp),
+//        verticalAlignment = Alignment.CenterVertically
+//    ) {
+//        Spacer(
+//            modifier = Modifier
+//                .height(70.dp)
+//        )
+//        TextField(
+//            value = text,
+//            onValueChange = { query ->
+//                text = query
+//                onSearch(query) // Memanggil onSearch saat teks pencarian berubah
+//            },
+//            shape = RoundedCornerShape(percent = 20),
+//            modifier = Modifier
+//                .height(40.dp),
+//            placeholder = {
+//                Text(text = "Search")
+//            },
+//            colors = TextFieldDefaults.colors(
+//                focusedIndicatorColor = Color.Transparent,
+//                unfocusedIndicatorColor = Color.Transparent,
+//                focusedContainerColor = Color.White,
+//                unfocusedContainerColor = Color.White
+//            ),
+//            trailingIcon = {
+//                Icon(
+//                    imageVector = Icons.Filled.Search, contentDescription = "Search")
+//            }
+//        )
+//        IconButton(
+//            onClick = {
+//                navController.navigate("keranjang")
+//            },
+//        ) {
+//            Icon(
+//                imageVector = Icons.Outlined.ShoppingCart,
+//                contentDescription = "Cart",
+//                tint = Color.White,
+//                modifier = Modifier.size(32.dp)
+//            )
+//        }
+//        IconButton(
+//            onClick = {
+//                navController.navigate("keranjang")
+//            },
+//        ) {
+//            Icon(
+//                imageVector = Icons.Outlined.FavoriteBorder,
+//                contentDescription = "Cart",
+//                tint = Color.White,
+//                modifier = Modifier.size(32.dp)
+//            )
+//        }
+//    }
 //}
+
+@Preview(showBackground = true)
+@Composable
+fun TopBarPreview() {
+    val navController = rememberNavController()
+    TopBar(
+        navController = navController,
+        onSearch = { query ->
+
+        }
+    )
+}
