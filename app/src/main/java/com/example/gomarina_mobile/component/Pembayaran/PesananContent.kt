@@ -1,5 +1,9 @@
 package com.example.gomarina_mobile.component.Pembayaran
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -46,6 +50,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -62,6 +67,17 @@ import com.example.gomarina_mobile.ui.theme.bg_card_pesan
 import com.example.gomarina_mobile.ui.theme.button
 import com.example.gomarina_mobile.ui.theme.poppinsFamily
 import androidx.compose.ui.unit.dp
+import com.example.gomarina_mobile.model.Address
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
+import java.math.BigInteger
 
 @Composable
 fun PesananContent() {
@@ -92,12 +108,48 @@ fun PesananContent() {
 
 @Composable
 fun Alamat() {
-    // State untuk alamat
-    val address = DummyData.dataAddress.firstOrNull()
+    var address by remember { mutableStateOf<List<Address>>(emptyList()) }
     var isEditDialogOpen by remember { mutableStateOf(false) }
-    var currentName by remember { mutableStateOf("Naafi'dea") }
-    var currentAddress by remember { mutableStateOf(address?.let { "${it.street}, ${it.kecamatan}, ${it.city}, ${it.provinsi}, ${it.kode_pos}" } ?: "") }
-    var currentDetail by remember { mutableStateOf(address?.detail ?: "") }
+    var currentAddress by remember { mutableStateOf("") }
+    var provinsi by remember { mutableStateOf("") }
+    var city by remember { mutableStateOf("") }
+    var kecamatan by remember { mutableStateOf("") }
+    var street by remember { mutableStateOf("") }
+    var postalCode by remember { mutableStateOf("") }
+    var currentDetail by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
+    val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+    val name = sharedPreferences.getString("name", "User")
+    val telp = sharedPreferences.getString("telp", "08**********")
+
+    LaunchedEffect(Unit) {
+        fetchAddress(context) { addressList, message ->
+            Log.d("ADRESS", "$addressList")
+            addressList?.let {
+                val firstAddress = it.firstOrNull()
+                firstAddress?.let { addr ->
+                    provinsi = addr.provinsi
+                    city = addr.city
+                    kecamatan = addr.kecamatan
+                    street = addr.street
+                    postalCode = addr.postalCode.toString()
+                }
+                address = it
+                currentAddress = it.joinToString(", ") { addr ->
+                    "${addr.provinsi}, ${addr.city}, ${addr.kecamatan}, ${addr.street}, ${addr.postalCode}"
+                }
+                currentDetail = it.firstOrNull()?.detail.orEmpty()
+                Log.d("ALAMAT", "$currentAddress")
+                Log.d("PROVINSI", provinsi)
+                Log.d("CITY", city)
+                Log.d("KECAMATAN", kecamatan)
+                Log.d("STREET", street)
+                Log.d("POSTAL CODE", postalCode)
+                Log.d("Detail", "$currentDetail")
+            }
+        }
+    }
 
     Row(
         modifier = Modifier
@@ -105,7 +157,6 @@ fun Alamat() {
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
         verticalAlignment = Alignment.Top
     ) {
-        // Icon Lokasi
         Icon(
             imageVector = Icons.Default.LocationOn,
             contentDescription = "Location Icon",
@@ -115,10 +166,8 @@ fun Alamat() {
                 .padding(end = 8.dp)
         )
 
-        // Kolom Konten
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -148,13 +197,13 @@ fun Alamat() {
             Spacer(modifier = Modifier.height(16.dp))
 
             Column {
-                // Baris nama
+                // Baris nama dan telepon
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "$currentName | 08587897089",
+                        text = "$name | $telp",
                         color = Color.Black,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Medium,
@@ -169,7 +218,7 @@ fun Alamat() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "$currentAddress",
+                        text = currentAddress.ifEmpty { "Alamat belum tersedia" },
                         color = Color.Black,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Medium,
@@ -184,7 +233,7 @@ fun Alamat() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "($currentDetail)",
+                        text = "(${currentDetail.ifEmpty { "Detail tidak tersedia" }})",
                         color = Color.Black,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Medium,
@@ -196,37 +245,49 @@ fun Alamat() {
 
     GarisBatas()
     Spacer(modifier = Modifier.height(16.dp))
+
+    // Edit Alamat
     if (isEditDialogOpen) {
         AlamatEditDialog(
-            currentName = currentName,
             currentAddress = currentAddress,
             currentDetail = currentDetail,
             onDismiss = { isEditDialogOpen = false },
-            onSave = { name, street, kecamatan, city, provinsi, kodePos, detail ->
-                currentName = name
-                currentAddress = "$street, $kecamatan, $city, $provinsi, $kodePos"
-                currentDetail = detail
+            onSave = { context, street, kecamatan, city, provinsi, kodePos, detail ->
+                //Manggil API Edit ALAMATTTT
+                updateAddress(
+                    context = context,
+                    kecamatan = kecamatan,
+                    postalCode = kodePos.toIntOrNull() ?: 0,
+                    street = street,
+                    detail = detail
+                ) { isSuccess, message ->
+                    if (isSuccess) {
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                        currentAddress = "$street, $kecamatan, $city, $provinsi, $kodePos"
+                        currentDetail = detail
+                    } else {
+                        Toast.makeText(context, "Error: $message", Toast.LENGTH_SHORT).show()
+                    }
+                }
                 isEditDialogOpen = false
             }
         )
     }
-
 }
 
 @Composable
 fun AlamatEditDialog(
-    currentName: String,
     currentAddress: String,
     currentDetail: String,
     onDismiss: () -> Unit,
-    onSave: (String, String, String, String, String, String, String) -> Unit
+    onSave: (Context, String, String, String, String, String, String) -> Unit
 ) {
-    var name by remember { mutableStateOf(TextFieldValue(currentName)) }
-    var street by remember { mutableStateOf(TextFieldValue("")) }
-    var kecamatan by remember { mutableStateOf(TextFieldValue("")) }
-    var city by remember { mutableStateOf(TextFieldValue("")) }
-    var provinsi by remember { mutableStateOf(TextFieldValue("")) }
-    var kodePos by remember { mutableStateOf(TextFieldValue("")) }
+    val context = LocalContext.current
+    var provinsi by remember { mutableStateOf(TextFieldValue(currentAddress.split(", ")[0])) }
+    var city by remember { mutableStateOf(TextFieldValue(currentAddress.split(", ")[1])) }
+    var kecamatan by remember { mutableStateOf(TextFieldValue(currentAddress.split(", ")[2])) }
+    var street by remember { mutableStateOf(TextFieldValue(currentAddress.split(", ")[3])) }
+    var postalCode by remember { mutableStateOf(TextFieldValue(currentAddress.split(", ")[4])) }
     var detail by remember { mutableStateOf(TextFieldValue(currentDetail)) }
 
     AlertDialog(
@@ -240,31 +301,29 @@ fun AlamatEditDialog(
             )
         },
         text = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                Text("Nama")
+            Column(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+                Text("Provinsi")
                 BasicTextField(
-                    value = name,
-                    onValueChange = { name = it },
+                    value = provinsi,
+                    onValueChange = {},
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color.LightGray, shape = MaterialTheme.shapes.small)
                         .padding(8.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text("Jalan (Street)")
+
+                Text("Kota (City)")
                 BasicTextField(
-                    value = street,
-                    onValueChange = { street = it },
+                    value = city,
+                    onValueChange = {},
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color.LightGray, shape = MaterialTheme.shapes.small)
                         .padding(8.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
+
                 Text("Kecamatan")
                 BasicTextField(
                     value = kecamatan,
@@ -275,36 +334,29 @@ fun AlamatEditDialog(
                         .padding(8.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text("Kota (City)")
+
+                Text("Jalan (Street)")
                 BasicTextField(
-                    value = city,
-                    onValueChange = { city = it },
+                    value = street,
+                    onValueChange = { street = it },
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color.LightGray, shape = MaterialTheme.shapes.small)
                         .padding(8.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text("Provinsi")
-                BasicTextField(
-                    value = provinsi,
-                    onValueChange = { provinsi = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.LightGray, shape = MaterialTheme.shapes.small)
-                        .padding(8.dp)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+
                 Text("Kode Pos")
                 BasicTextField(
-                    value = kodePos,
-                    onValueChange = { kodePos = it },
+                    value = postalCode,
+                    onValueChange = { postalCode = it },
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color.LightGray, shape = MaterialTheme.shapes.small)
                         .padding(8.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
+
                 Text("Detail")
                 BasicTextField(
                     value = detail,
@@ -320,12 +372,12 @@ fun AlamatEditDialog(
             Button(
                 onClick = {
                     onSave(
-                        name.text,
+                        context,
                         street.text,
                         kecamatan.text,
                         city.text,
                         provinsi.text,
-                        kodePos.text,
+                        postalCode.text,
                         detail.text
                     )
                 },
@@ -396,8 +448,6 @@ fun PesananItem(item: KeranjangItem) {
             )
         }
     }
-
-
 }
 
 @Composable
@@ -538,6 +588,123 @@ fun GarisBatas() {
 
             currentX = endX
             colorIndex++
+        }
+    }
+}
+
+// Mengambil alamat
+fun fetchAddress(context: Context, onResult: (List<Address>?, String) -> Unit) {
+    val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+    val userId = sharedPreferences.getInt("id", 0)
+    Log.d("ROLE_ID", "$userId")
+
+    val url = "http://10.0.2.2:5000/api/v1/address?role_id=$userId"
+
+    val client = OkHttpClient()
+    val request = Request.Builder()
+        .url(url)
+        .build()
+
+    val scope = CoroutineScope(Dispatchers.IO)
+    scope.launch {
+        try {
+            val response = client.newCall(request).execute()
+            val responseData = response.body?.string() ?: ""
+            Log.d("fetchAddress", "Respons API: $responseData")
+
+            if (response.isSuccessful) {
+                val jsonObject = JSONObject(responseData)
+
+                if (jsonObject.has("address")) {
+                    val addressObject = jsonObject.getJSONObject("address")
+                    val addressItem = Address(
+                        provinsi = addressObject.optString("provinsi", ""),
+                        city = addressObject.optString("city", ""),
+                        kecamatan = addressObject.optString("kecamatan", ""),
+                        postalCode = addressObject.optInt("postalCode", 0),
+                        street = addressObject.optString("street", ""),
+                        detail = addressObject.optString("detail", "")
+                    )
+                    Log.d("ADRESS", "$addressItem")
+                    onResult(listOf(addressItem), "Success") // Bungkus object ke dalam list
+                } else {
+                    onResult(null, "Error: 'address' key not found in JSON response")
+                }
+            } else {
+                Log.e("fetchAddress", "Respons gagal: ${response.message}")
+                onResult(null, "Error: ${response.message}")
+            }
+        } catch (e: Exception) {
+            Log.e("fetchAddress", "Request gagal: ${e.message}")
+            onResult(null, "Request Failed: ${e.message}")
+        }
+    }
+}
+
+// UUpdate alamat
+fun updateAddress(
+    context: Context,
+    kecamatan: String,
+    postalCode: Int,
+    street: String,
+    detail: String,
+    onResult: (Boolean, String) -> Unit
+) {
+    val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+    val roleId = sharedPreferences.getInt("id", 0)
+
+    if (roleId == 0) {
+        onResult(false, "Role ID is missing!")
+        return
+    }
+    val url = "http://10.0.2.2:5000/api/v1/updateAddress/$roleId"
+    // Membuat JSON request body
+    val jsonObject = JSONObject().apply {
+        put("kecamatan", kecamatan)
+        put("postalCode", postalCode)
+        put("street", street)
+        put("detail", detail)
+    }
+
+    val requestBody = jsonObject.toString().toRequestBody("application/json".toMediaTypeOrNull())
+
+    val client = OkHttpClient()
+    val request = Request.Builder()
+        .url(url)
+        .put(requestBody)
+        .build()
+
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val response = client.newCall(request).execute()
+            val responseData = response.body?.string() ?: ""
+
+            Log.d("updateAddress", "Response API: $responseData")
+
+            if (response.isSuccessful) {
+                val jsonResponse = JSONObject(responseData)
+                val success = jsonResponse.optBoolean("success", false)
+                val message = jsonResponse.optString("message", "Update failed")
+
+                withContext(Dispatchers.Main) {
+                    if (success) {
+                        onResult(true, "Address updated successfully!")
+                    } else {
+                        onResult(false, message)
+                    }
+                }
+            } else {
+                val errorMessage = "Error: ${response.message}"
+                Log.e("updateAddress", errorMessage)
+                withContext(Dispatchers.Main) {
+                    onResult(false, errorMessage)
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("updateAddress", "Request failed: ${e.message}")
+            withContext(Dispatchers.Main) {
+                onResult(false, "Request failed: ${e.message}")
+            }
         }
     }
 }

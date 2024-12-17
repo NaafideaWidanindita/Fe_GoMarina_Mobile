@@ -76,54 +76,12 @@ object DummyData {
 
     val dataAddress = listOf(
         Address(
-            id = 1,
-            role_id = BigInteger.valueOf(1),
             provinsi = "Kepulauan Riau",
             city = "Batam",
             kecamatan = "Batu Aji",
-            kode_pos = 29424,
+            postalCode = 29424,
             street = "Jl. Letjend Suprapto No. 45",
             detail = "Rumah warna biru dekat pasar"
-        ),
-        Address(
-            id = 2,
-            role_id = BigInteger.valueOf(2),
-            provinsi = "Jawa Tengah",
-            city = "Semarang",
-            kecamatan = "Tembalang",
-            kode_pos = 50275,
-            street = "Jl. Soekarno Hatta No. 45",
-            detail = "Gedung dengan pintu merah besar"
-        ),
-        Address(
-            id = 3,
-            role_id = BigInteger.valueOf(3),
-            provinsi = "DKI Jakarta",
-            city = "Jakarta Selatan",
-            kecamatan = "Kebayoran Baru",
-            kode_pos = 12110,
-            street = "Jl. Sudirman No. 10",
-            detail = "Lantai 2 gedung perkantoran"
-        ),
-        Address(
-            id = 4,
-            role_id = BigInteger.valueOf(1),
-            provinsi = "Yogyakarta",
-            city = "Sleman",
-            kecamatan = "Depok",
-            kode_pos = 55281,
-            street = "Jl. Kaliurang KM 7",
-            detail = "Kosan warna biru sebelah warung"
-        ),
-        Address(
-            id = 5,
-            role_id = BigInteger.valueOf(2),
-            provinsi = "Bali",
-            city = "Denpasar",
-            kecamatan = "Kuta Selatan",
-            kode_pos = 80361,
-            street = "Jl. Sunset Road No. 88",
-            detail = "Villa dengan kolam renang di halaman depan"
         )
     )
 

@@ -1,6 +1,7 @@
 package com.example.gomarina_mobile.component.Pembayaran
 
 import android.app.Activity
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -40,6 +41,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.gomarina_mobile.ui.theme.bg_card_pesan
 import com.example.gomarina_mobile.ui.theme.poppinsFamily
 import android.content.Intent
+import androidx.compose.ui.platform.LocalContext
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -47,7 +49,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material3.Button
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
@@ -64,14 +65,13 @@ fun Pembayaran() {
     var selectedPaymentMethod by remember { mutableStateOf("Metode pembayaran (Bank Mandiri)") }
     val bankNumber = "09867363193981"
     var expanded by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     // URI gambar
     var imageUri by remember { mutableStateOf<Uri?>(null) }
 
     // AlertDialog
     var showDialog by remember { mutableStateOf(false) }
-
-    val context = LocalContext.current
 
     // Hasil kamera
     val imageCaptureLauncher = rememberLauncherForActivityResult(

@@ -242,6 +242,7 @@ fun loginUser(
                 // Ambil data user yg login
                 val userObject = jsonResponse.getJSONObject("user")
                 val userId = userObject.getInt("id")
+                val name = userObject.getString("name")
                 val userUsername = userObject.getString("username")
                 val userRole = userObject.getString("role")
                 val userTelp = userObject.getString("telp")
@@ -254,6 +255,7 @@ fun loginUser(
                 val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
                 val editor = sharedPreferences.edit()
                 editor.putInt("id", userId)
+                editor.putString("name",name)
                 editor.putString("username", userUsername)
                 editor.putString("role", userRole)
                 editor.putString("telp", userTelp)
