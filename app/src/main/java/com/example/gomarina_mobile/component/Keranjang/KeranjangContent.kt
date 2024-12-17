@@ -79,13 +79,10 @@ fun KeranjangContent(
             .fillMaxSize()
             .background(bacground)
     ) {
-        // Ganti Column dengan LazyColumn
         LazyColumn(
-            modifier = Modifier
-                .weight(1f)
+            modifier = Modifier.weight(1f)
         ) {
             items(itemList) { item ->
-                Log.d("LazyColumn", "Rendering item: $item")
                 SwipeableItemKeranjang(
                     item = item,
                     onQuantityChange = { newQuantity ->
@@ -125,51 +122,6 @@ fun KeranjangContent(
     }
 }
 
-fun getItemKeranjangByUserId(
-    userId: Int,
-    onResult: (List<KeranjangItem>?, String) -> Unit
-) {
-    val client = OkHttpClient()
-    val request = Request.Builder()
-        .url("http://10.0.2.2:5000/api/v1/cart?user_id=$userId")
-        .build()
-
-    CoroutineScope(Dispatchers.IO).launch {
-        try {
-            val response = client.newCall(request).execute()
-            val responseData = response.body?.string() ?: ""
-
-            if (response.isSuccessful) {
-                val jsonObject = JSONObject(responseData)
-                if (jsonObject.has("data")) {
-                    val jsonArray = jsonObject.getJSONArray("data")
-                    val carts = mutableListOf<KeranjangItem>()
-
-                    for (i in 0 until jsonArray.length()) {
-                        val cartObject = jsonArray.getJSONObject(i)
-                        val cart = KeranjangItem(
-                            id = cartObject.getInt("id"),
-                            name = cartObject.getString("name"),
-                            price = cartObject.optString("price", "0").toBigDecimalOrNull() ?: BigDecimal.ZERO,
-                            image = cartObject.optString("image", "0").toIntOrNull() ?:0,
-                            imageUrl = cartObject.getString("imageUrl"),
-                            jumlah = cartObject.getInt("jumlah")
-                        )
-                        carts.add(cart)
-                    }
-                    onResult(carts, "Success")
-                } else {
-                    onResult(null, "Error: Data not found")
-                }
-            } else {
-                onResult(null, "Error: ${response.message}")
-            }
-        } catch (e: Exception) {
-            onResult(null, "Request Failed: ${e.message}")
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SwipeableItemKeranjang(
@@ -182,7 +134,7 @@ fun SwipeableItemKeranjang(
     val maxSwipeOffset = 100.dp
     val anchors = mapOf(0f to 0, -with(LocalDensity.current) { maxSwipeOffset.toPx() } to 1)
 
-    val imageRequest  = if (item.imageUrl.isNotEmpty()) {
+    val imageRequest = if (item.imageUrl.isNotEmpty()) {
         ImageRequest.Builder(LocalContext.current)
             .data(item.imageUrl.replace("localhost", "10.0.2.2"))
             .crossfade(true)
@@ -252,8 +204,6 @@ fun SwipeableItemKeranjang(
                     contentDescription = "Gambar ${item.name}",
                     modifier = Modifier.size(64.dp)
                 )
-
-
                 Spacer(modifier = Modifier.width(8.dp))
                 Column(
                     modifier = Modifier.weight(1f)
@@ -392,12 +342,12 @@ fun ButtonCheckout(
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun KeranjangPreview() {
-//    val navController = rememberNavController()
-//    KeranjangContent(
-//        navController = navController,
-//        items = DummyData.dataKeranjangItems
-//    )
-//}
+@Preview(showBackground = true)
+@Composable
+fun KeranjangPreview() {
+    val navController = rememberNavController()
+    KeranjangContent(
+        navController = navController,
+        items = DummyData.dataKeranjangItems
+    )
+}

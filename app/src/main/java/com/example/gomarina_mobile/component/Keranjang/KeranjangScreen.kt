@@ -17,38 +17,81 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import com.example.gomarina_mobile.model.KeranjangItem
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
+import java.math.BigDecimal
 
 @Composable
 fun KeranjangScreen(navController: NavHostController) {
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+    val userId = sharedPreferences.getInt("id", 0) // Ambil userId dari SharedPreferences
 
-    // Menampilkan loading sementara data diambil
     var keranjangItems by remember { mutableStateOf<List<KeranjangItem>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
 
-    // Fetch data saat `role_id` berubah
-    val userId = sharedPreferences.getInt("user_id", 0)
-
+    // Fetch data keranjang dari API
     LaunchedEffect(userId) {
-        if (userId != 0) {
-            getItemKeranjangByUserId(userId) { items, status ->
-                Log.d("KeranjangScreen", "Fetch Status: $status")
-                if (status == "Success" && items != null) {
-                    keranjangItems = items
+        if (userId == 0) {
+            errorMessage = "Anda belum login"
+            isLoading = false
+            return@LaunchedEffect
+        }
+
+        val url = "http://10.0.2.2:5000/api/v1/cart_byrole/$userId"
+        val client = OkHttpClient()
+        val request = Request.Builder().url(url).build()
+
+        withContext(Dispatchers.IO) {
+            try {
+                val response = client.newCall(request).execute()
+                val responseData = response.body?.string() ?: ""
+
+                if (response.isSuccessful) {
+                    val jsonObject = JSONObject(responseData)
+
+                    if (jsonObject.has("data")) {
+                        val jsonArray = jsonObject.getJSONArray("data")
+                        val items = mutableListOf<KeranjangItem>()
+
+                        for (i in 0 until jsonArray.length()) {
+                            val itemObject = jsonArray.getJSONObject(i)
+                            val keranjangItem = KeranjangItem(
+                                id = itemObject.getInt("id"),
+                                name = itemObject.getString("name"),
+                                imageUrl = itemObject.optString("imageUrl", ""),
+                                price = itemObject.optString("price", "0").toBigDecimalOrNull() ?: BigDecimal.ZERO,
+                                image = 0,
+                                jumlah = itemObject.optInt("jumlah", 1),
+                                isChecked = false // Default unchecked
+                            )
+                            items.add(keranjangItem)
+                        }
+                        keranjangItems = items
+                        isLoading = false
+                    } else {
+                        errorMessage = "'data' key tidak ditemukan di respons API"
+                        isLoading = false
+                    }
                 } else {
-                    Log.e("KeranjangScreen", "Error fetching data: $status")
+                    errorMessage = "Gagal memuat data: ${response.message}"
+                    isLoading = false
                 }
+            } catch (e: Exception) {
+                errorMessage = "Terjadi kesalahan: ${e.message}"
                 isLoading = false
             }
-        } else {
-            isLoading = false
-            Log.e("KeranjangScreen", "user_id is not valid")
         }
     }
 
+    // Tampilan UI
     Column {
         KeranjangHeader(navController)
 
@@ -58,6 +101,17 @@ fun KeranjangScreen(navController: NavHostController) {
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()
+            }
+        } else if (errorMessage != null) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = errorMessage!!,
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center
+                )
             }
         } else if (keranjangItems.isEmpty()) {
             Box(
