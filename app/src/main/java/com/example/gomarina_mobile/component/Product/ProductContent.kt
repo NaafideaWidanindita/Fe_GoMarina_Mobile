@@ -1,6 +1,8 @@
 package com.example.gomarina_mobile.component.Product
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -30,6 +33,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,18 +55,26 @@ import com.example.gomarina_mobile.ui.theme.poppinsFamily
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.math.BigDecimal
 
 @Composable
-fun ProdukContent(navController: NavHostController, productId: Int) {
+fun ProdukContent(navController: NavHostController, product_id: Int) {
     var produk by remember { mutableStateOf<Produk?>(null) }
+    var quantity by remember { mutableStateOf(1) }
     val errorMessage by remember { mutableStateOf<String?>(null) }
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+    val roleId = sharedPreferences.getInt("id", 0)
 
-    LaunchedEffect(productId) {
-        ProductDetail(id = productId) { result ->
+    LaunchedEffect(product_id) {
+        ProductDetail(id = product_id) { result ->
             produk = result
         }
     }
@@ -94,7 +106,6 @@ fun ProdukContent(navController: NavHostController, productId: Int) {
                             .fillMaxWidth()
                             .padding(vertical = 5.dp, horizontal = 20.dp)
                     ) {
-                        var quantity by remember { mutableStateOf(1) }
                         ProdukJumlah(quantity = quantity) { quantity = it }
                         ProdukHarga(harga = produk!!.price, quantity = quantity)
                     }
@@ -107,7 +118,20 @@ fun ProdukContent(navController: NavHostController, productId: Int) {
                         .align(Alignment.BottomCenter)
                         .padding(16.dp)
                 ) {
-                    AddKeranjangButton(navController = navController)
+                    AddKeranjangButton(
+                        role_id = roleId,
+                        product_id = produk!!.id,
+                        quantity = quantity,
+                        totalHarga = produk!!.price * quantity.toBigDecimal(),
+                        onKeranjangItem = { successMessage ->
+                            coroutineScope.launch {
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(context, successMessage, Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            }
+                        }
+                    )
                 }
             }
         }
@@ -191,8 +215,8 @@ fun ProdukDetails(produk: Produk) {
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(16.dp))
-            
-        }
+
+    }
 }
 
 @Composable
@@ -244,22 +268,102 @@ fun ProdukJumlah(quantity: Int, onQuantityChange: (Int) -> Unit) {
     }
 }
 
+
 @Composable
-fun AddKeranjangButton(navController: NavHostController) {
+fun AddKeranjangButton(
+    role_id: Int,
+    product_id: Int,
+    quantity: Int,
+    totalHarga: BigDecimal,
+    onKeranjangItem: (String) -> Unit
+) {
+    var isLoading by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+
+    val coroutineScope = rememberCoroutineScope()
+
     Button(
-        onClick = { navController.navigate("Keranjang") },
+        onClick = {
+            isLoading = true
+            coroutineScope.launch {
+                addToKeranjang(role_id, product_id, quantity, totalHarga) { success, error ->
+                    isLoading = false
+                    if (success) {
+                        onKeranjangItem("Produk Berhasil Ditambahkan Ke Keranjang")
+                    } else {
+                        errorMessage = error
+                    }
+                }
+            }
+        },
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(containerColor = button)
     ) {
+        if (isLoading) {
+            CircularProgressIndicator(
+                color = Color.White,
+                modifier = Modifier.size(24.dp)
+            )
+        } else {
+            Text(
+                text = "Masukkan Keranjang",
+                color = Color.White,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+
+    errorMessage?.let {
         Text(
-            text = "Masukkan Keranjang",
-            color = Color.White,
-            fontFamily = poppinsFamily,
-            fontSize = 20.sp,
+            text = it,
+            color = Color.Red,
+            modifier = Modifier.padding(top = 8.dp),
             fontWeight = FontWeight.Bold
         )
+    }
+}
+
+fun addToKeranjang(
+    role_id: Int,
+    product_id: Int,
+    quantity: Int,
+    totalHarga: BigDecimal,
+    onResult: (Boolean, String?) -> Unit
+){
+    val client = OkHttpClient()
+    val requestBody = JSONObject().apply {
+        put("jumlah", quantity)
+        put("price", totalHarga.toPlainString())
+    }.toString().toRequestBody("application/json".toMediaTypeOrNull())
+
+    Log.d("ADD_TO_CART", "Role ID: $role_id, Product ID: $product_id, Quantity: $quantity, Total Price: $totalHarga")
+    Log.d("REQUEST_BODY", requestBody.toString())
+
+
+    val request = Request.Builder()
+        .url("http://10.0.2.2:5000/api/v1/cart/$role_id/$product_id")
+        .post(requestBody)
+        .build()
+
+    val scope = CoroutineScope(Dispatchers.IO)
+    scope.launch {
+        try {
+            val response = client.newCall(request).execute()
+            if (response.isSuccessful) {
+                Log.d("API_SUCCESS", "Item added to cart successfully")
+                onResult(true,null)
+            } else {
+                val errorMessage = response.body?.string() ?: "Unknown error"
+                Log.d("API_ERROR", "Error adding item to cart: $errorMessage")
+                onResult(false, errorMessage)
+            }
+        } catch (e: Exception) {
+            Log.d("REQUEST_FAILED", "${e.message}")
+            onResult(false, e.message)
+        }
     }
 }
 

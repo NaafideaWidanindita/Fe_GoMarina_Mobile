@@ -389,7 +389,7 @@ fun PesananItem(item: KeranjangItem) {
             }
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "${item.quantity} kg",
+                text = "${item.jumlah} kg",
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
                 color = Color.Black
@@ -402,7 +402,9 @@ fun PesananItem(item: KeranjangItem) {
 
 @Composable
 fun DetailBayar(items: List<KeranjangItem>, onTotalChanged: (Float) -> Unit) {
-    val totalBayar = items.sumOf { it.price * it.quantity }.toFloat()
+    val totalBayar = items.sumOf {
+        it.price.multiply(it.jumlah.toBigDecimal())
+    }.toFloat()
     val selectedCourier = remember { mutableStateOf("Pilih") }
     val selectedOngkir = remember { mutableStateOf(0f) } // Default ongkir 0
     val totalALL = totalBayar + selectedOngkir.value
