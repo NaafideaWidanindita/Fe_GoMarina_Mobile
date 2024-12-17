@@ -54,24 +54,24 @@ object DummyData {
 //        ),
 //    )
 
-    val dataKeranjangItems = listOf(
-        KeranjangItem(id = 1, name = "Jambu", price = 32000, image = R.drawable.jambu),
-        KeranjangItem(id = 2, name = "Selai Jambu", price = 25000, image = R.drawable.selaijambu),
-        KeranjangItem(id = 3, name = "Eskrim Jambu", price = 10000, image = R.drawable.eskrimjambu),
-        KeranjangItem(id = 4, name = "Rambutan", price = 32000, image = R.drawable.jambu),
-        KeranjangItem(id = 5, name = "Angga", price = 25000, image = R.drawable.jambu),
-        KeranjangItem(id = 6, name = "Rina", price = 15000, image = R.drawable.jambu),
-        KeranjangItem(id = 7, name = "Meli", price = 15000, image = R.drawable.jambu),
-        KeranjangItem(id = 8, name = "Aku", price = 32000, image = R.drawable.jambu),
-        KeranjangItem(id = 9, name = "Ara", price = 25000, image = R.drawable.jambu),
-        KeranjangItem(id = 10, name = "Mika", price = 15000, image = R.drawable.jambu)
-        // Tambahkan item lain sesuai kebutuhan
-    )
+//    val dataKeranjangItems = listOf(
+//        KeranjangItem(id = 1, name = "Jambu", price = 32000, image = R.drawable.jambu),
+//        KeranjangItem(id = 2, name = "Selai Jambu", price = 25000, image = R.drawable.selaijambu),
+//        KeranjangItem(id = 3, name = "Eskrim Jambu", price = 10000, image = R.drawable.eskrimjambu),
+//        KeranjangItem(id = 4, name = "Rambutan", price = 32000, image = R.drawable.jambu),
+//        KeranjangItem(id = 5, name = "Angga", price = 25000, image = R.drawable.jambu),
+//        KeranjangItem(id = 6, name = "Rina", price = 15000, image = R.drawable.jambu),
+//        KeranjangItem(id = 7, name = "Meli", price = 15000, image = R.drawable.jambu),
+//        KeranjangItem(id = 8, name = "Aku", price = 32000, image = R.drawable.jambu),
+//        KeranjangItem(id = 9, name = "Ara", price = 25000, image = R.drawable.jambu),
+//        KeranjangItem(id = 10, name = "Mika", price = 15000, image = R.drawable.jambu)
+//        // Tambahkan item lain sesuai kebutuhan
+//    )
 
     val dataPesanan = listOf(
-        KeranjangItem(id = 1, name = "Jambu", quantity = 1, price = 32000, image = R.drawable.jambu),
-        KeranjangItem(id = 2, name = "Selai Jambu", quantity = 2,price = 25000, image = R.drawable.selaijambu),
-        KeranjangItem(id = 3, name = "Eskrim Jambu", quantity = 7,price = 10000, image = R.drawable.eskrimjambu),
+        KeranjangItem(id = 1, name = "Jambu", jumlah = 1, price = BigDecimal(32000) , image = R.drawable.jambu, imageUrl = "jambu"),
+        KeranjangItem(id = 2, name = "Selai Jambu", jumlah = 2,price = BigDecimal(25000), image = R.drawable.selaijambu, imageUrl = "Selai Jambu"),
+        KeranjangItem(id = 3, name = "Eskrim Jambu", jumlah = 7,price = BigDecimal(10000), image = R.drawable.eskrimjambu, imageUrl = "Eskrim Jambu")
     )
 
     val dataAddress = listOf(

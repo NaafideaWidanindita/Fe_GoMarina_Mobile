@@ -12,11 +12,14 @@
 
 package com.example.gomarina_mobile.model
 
+import java.math.BigDecimal
+
 data class KeranjangItem(
     val id: Int,
     val name: String,
-    val price: Int,
+    val price: BigDecimal,
     val image: Int,
-    var quantity: Int = 1,
+    val imageUrl: String,
+    var jumlah: Int = 1,
     var isChecked: Boolean = false
 )

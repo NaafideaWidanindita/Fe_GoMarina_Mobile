@@ -2,11 +2,14 @@
 
 package com.example.gomarina_mobile.component.Keranjang
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,7 +24,10 @@ import androidx.compose.material.swipeable
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -31,9 +37,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.example.gomarina_mobile.R
 import com.example.gomarina_mobile.dummyData.DummyData
 import com.example.gomarina_mobile.model.KeranjangItem
+import com.example.gomarina_mobile.model.Produk
 import com.example.gomarina_mobile.ui.theme.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONArray
+import org.json.JSONObject
+import java.math.BigDecimal
+import java.math.RoundingMode
 import kotlin.math.roundToInt
 
 @Composable
@@ -46,7 +66,12 @@ fun KeranjangContent(
     var isAllChecked by remember { mutableStateOf(false) }
 
     LaunchedEffect(itemList) {
-        total = itemList.filter { it.isChecked }.sumOf { it.quantity * it.price }
+        total = itemList.filter { it.isChecked }
+            .sumOf {
+                it.price.multiply(it.jumlah.toBigDecimal()) // Menggunakan .multiply()
+            }
+            .setScale(0, RoundingMode.HALF_UP) // Membulatkan ke angka utuh
+            .toInt() // Mengonversi ke Int
     }
 
     Column(
@@ -54,17 +79,18 @@ fun KeranjangContent(
             .fillMaxSize()
             .background(bacground)
     ) {
-        Column(
+        // Ganti Column dengan LazyColumn
+        LazyColumn(
             modifier = Modifier
                 .weight(1f)
-                .verticalScroll(rememberScrollState())
         ) {
-            itemList.forEach { item ->
+            items(itemList) { item ->
+                Log.d("LazyColumn", "Rendering item: $item")
                 SwipeableItemKeranjang(
                     item = item,
                     onQuantityChange = { newQuantity ->
                         val updatedList = itemList.map {
-                            if (it.id == item.id) it.copy(quantity = newQuantity) else it
+                            if (it.id == item.id) it.copy(jumlah = newQuantity) else it
                         }.toMutableList()
                         itemList = updatedList
                     },
@@ -81,6 +107,7 @@ fun KeranjangContent(
                 )
             }
         }
+
         ButtonCheckout(
             navController = navController,
             total = total,
@@ -98,6 +125,51 @@ fun KeranjangContent(
     }
 }
 
+fun getItemKeranjangByUserId(
+    userId: Int,
+    onResult: (List<KeranjangItem>?, String) -> Unit
+) {
+    val client = OkHttpClient()
+    val request = Request.Builder()
+        .url("http://10.0.2.2:5000/api/v1/cart?user_id=$userId")
+        .build()
+
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val response = client.newCall(request).execute()
+            val responseData = response.body?.string() ?: ""
+
+            if (response.isSuccessful) {
+                val jsonObject = JSONObject(responseData)
+                if (jsonObject.has("data")) {
+                    val jsonArray = jsonObject.getJSONArray("data")
+                    val carts = mutableListOf<KeranjangItem>()
+
+                    for (i in 0 until jsonArray.length()) {
+                        val cartObject = jsonArray.getJSONObject(i)
+                        val cart = KeranjangItem(
+                            id = cartObject.getInt("id"),
+                            name = cartObject.getString("name"),
+                            price = cartObject.optString("price", "0").toBigDecimalOrNull() ?: BigDecimal.ZERO,
+                            image = cartObject.optString("image", "0").toIntOrNull() ?:0,
+                            imageUrl = cartObject.getString("imageUrl"),
+                            jumlah = cartObject.getInt("jumlah")
+                        )
+                        carts.add(cart)
+                    }
+                    onResult(carts, "Success")
+                } else {
+                    onResult(null, "Error: Data not found")
+                }
+            } else {
+                onResult(null, "Error: ${response.message}")
+            }
+        } catch (e: Exception) {
+            onResult(null, "Request Failed: ${e.message}")
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SwipeableItemKeranjang(
@@ -109,6 +181,18 @@ fun SwipeableItemKeranjang(
     val swipeState = rememberSwipeableState(initialValue = 0)
     val maxSwipeOffset = 100.dp
     val anchors = mapOf(0f to 0, -with(LocalDensity.current) { maxSwipeOffset.toPx() } to 1)
+
+    val imageRequest  = if (item.imageUrl.isNotEmpty()) {
+        ImageRequest.Builder(LocalContext.current)
+            .data(item.imageUrl.replace("localhost", "10.0.2.2"))
+            .crossfade(true)
+            .build()
+    } else {
+        ImageRequest.Builder(LocalContext.current)
+            .data(R.drawable.noimage)
+            .crossfade(true)
+            .build()
+    }
 
     Box(
         modifier = Modifier
@@ -163,11 +247,13 @@ fun SwipeableItemKeranjang(
                         checkmarkColor = Color.White
                     )
                 )
-                Image(
-                    painter = painterResource(id = item.image),
+                AsyncImage(
+                    model = imageRequest,
                     contentDescription = "Gambar ${item.name}",
                     modifier = Modifier.size(64.dp)
                 )
+
+
                 Spacer(modifier = Modifier.width(8.dp))
                 Column(
                     modifier = Modifier.weight(1f)
@@ -188,7 +274,7 @@ fun SwipeableItemKeranjang(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(
-                        onClick = { if (item.quantity > 1) onQuantityChange(item.quantity - 1) }
+                        onClick = { if (item.jumlah > 1) onQuantityChange(item.jumlah - 1) }
                     ) {
                         Box(
                             modifier = Modifier
@@ -201,14 +287,14 @@ fun SwipeableItemKeranjang(
                         }
                     }
                     Text(
-                        text = "${item.quantity}kg",
+                        text = "${item.jumlah}kg",
                         fontFamily = poppinsFamily,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         modifier = Modifier.padding(horizontal = 5.dp)
                     )
                     IconButton(
-                        onClick = { onQuantityChange(item.quantity + 1) }
+                        onClick = { onQuantityChange(item.jumlah + 1) }
                     ) {
                         Box(
                             modifier = Modifier
@@ -224,6 +310,8 @@ fun SwipeableItemKeranjang(
         }
     }
 }
+
+
 
 @Composable
 fun ButtonCheckout(
@@ -304,12 +392,12 @@ fun ButtonCheckout(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun KeranjangPreview() {
-    val navController = rememberNavController()
-    KeranjangContent(
-        navController = navController,
-        items = DummyData.dataKeranjangItems
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun KeranjangPreview() {
+//    val navController = rememberNavController()
+//    KeranjangContent(
+//        navController = navController,
+//        items = DummyData.dataKeranjangItems
+//    )
+//}
