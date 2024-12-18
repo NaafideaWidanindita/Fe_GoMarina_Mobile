@@ -1,5 +1,6 @@
 package com.example.gomarina_mobile.component.Pembayaran
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,8 +37,12 @@ import com.example.gomarina_mobile.ui.theme.button
 import com.example.gomarina_mobile.ui.theme.poppinsFamily
 
 @Composable
-fun PesananScreen(navController: NavHostController) {
+fun PesananScreen(navController: NavHostController, selectedItems: String) {
     var totalALL by remember { mutableStateOf(0.0) }
+    var selectedItemsState by remember { mutableStateOf(selectedItems) }
+
+    Log.d("PesananScreen", "Selected Items: $selectedItemsState")
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -48,7 +53,7 @@ fun PesananScreen(navController: NavHostController) {
             modifier = Modifier
                 .weight(1f)
         ) {
-            PesananContent()
+            PesananContent(selectedItems = selectedItemsState)
         }
         ButtonPembayaran(totalALL = totalALL)
     }
@@ -101,9 +106,11 @@ fun ButtonPembayaran(totalALL: Double) {
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun PesananScreenPreview() {
     val navController = rememberNavController()
-    PesananScreen(navController = navController)
+    val selectedItems = "Item 1, Item 2, Item 3"
+    PesananScreen(navController = navController, selectedItems = selectedItems)
 }

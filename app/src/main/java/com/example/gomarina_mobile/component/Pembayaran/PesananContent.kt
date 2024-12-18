@@ -1,6 +1,5 @@
 package com.example.gomarina_mobile.component.Pembayaran
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -60,7 +59,6 @@ import androidx.compose.ui.unit.sp
 import com.example.gomarina_mobile.dummyData.DummyData
 import com.example.gomarina_mobile.dummyData.DummyData.dataDelivery
 import com.example.gomarina_mobile.model.Delivery
-import com.example.gomarina_mobile.model.KeranjangItem
 import com.example.gomarina_mobile.ui.theme.bacground
 import com.example.gomarina_mobile.ui.theme.bg_card
 import com.example.gomarina_mobile.ui.theme.bg_card_pesan
@@ -68,6 +66,7 @@ import com.example.gomarina_mobile.ui.theme.button
 import com.example.gomarina_mobile.ui.theme.poppinsFamily
 import androidx.compose.ui.unit.dp
 import com.example.gomarina_mobile.model.Address
+import com.example.gomarina_mobile.model.KeranjangItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -77,13 +76,13 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
-import java.math.BigInteger
 
 @Composable
-fun PesananContent() {
+fun PesananContent(selectedItems: String) {
     val scrollState = rememberScrollState()
     var totalALL by remember { mutableStateOf(0f) }
 
+    Log.d("ItemDiPesananContent", "$selectedItems")
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -712,5 +711,8 @@ fun updateAddress(
 @Preview(showBackground = true)
 @Composable
 fun PesananContentPreview() {
-    PesananContent()
+
+    val selectedItems = "Item 1, Item 2, Item 3"
+
+    PesananContent(selectedItems = selectedItems)
 }

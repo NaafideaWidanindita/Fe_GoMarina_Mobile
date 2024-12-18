@@ -102,4 +102,7 @@ dependencies {
     implementation("androidx.camera:camera-view:1.3.1")
     implementation("androidx.camera:camera-core:1.3.0")
     implementation("androidx.camera:camera-lifecycle:1.3.0")
+
+    //Ubah jadi json
+    implementation ("com.google.code.gson:gson:2.8.8")
 }

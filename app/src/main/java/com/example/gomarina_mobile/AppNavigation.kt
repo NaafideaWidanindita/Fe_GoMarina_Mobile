@@ -1,12 +1,11 @@
 package com.example.gomarina_mobile
 
+import android.media.RouteListingPreference
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.gomarina_mobile.component.Beranda.Beranda
 import com.example.gomarina_mobile.component.Cek.CekPesananScreen
 import com.example.gomarina_mobile.component.Cek.CekScreen
@@ -41,7 +40,18 @@ fun AppNavigation() {
                 Text("Error: Produk ID tidak valid.")
             }
         }
-        composable("pesanan") { PesananScreen(navController = navController) }
+//        composable("pesanan") { PesananScreen(navController = navController) }
+//        composable("pesanan/{selectedItems}") { backStackEntry ->
+//            val selectedItems = backStackEntry.arguments?.getString("selectedItems")?.split(",") ?: listOf()
+//            PesananScreen(navController = navController, selectedItems = selectedItems)
+//        }
+        composable("pesanan/{selectedItems}") { backStackEntry ->
+            // Ambil parameter selectedItems dari URL yang sudah dikirim sebagai string utuh
+            val selectedItems = backStackEntry.arguments?.getString("selectedItems") ?: ""
+            PesananScreen(navController = navController, selectedItems = selectedItems)
+        }
+
+
         composable("riwayatpesanan") { RiwayatPesananScreen(navController = navController) }
         composable("riwayatpesanan") { RiwayatPesananScreen(navController = navController) }
         composable("keranjang") { KeranjangScreen(navController = navController) }

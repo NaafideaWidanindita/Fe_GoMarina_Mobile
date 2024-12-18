@@ -3,17 +3,14 @@
 package com.example.gomarina_mobile.component.Keranjang
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material3.*
@@ -24,12 +21,9 @@ import androidx.compose.material.swipeable
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -42,19 +36,12 @@ import coil.request.ImageRequest
 import com.example.gomarina_mobile.R
 import com.example.gomarina_mobile.dummyData.DummyData
 import com.example.gomarina_mobile.model.KeranjangItem
-import com.example.gomarina_mobile.model.Produk
 import com.example.gomarina_mobile.ui.theme.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import org.json.JSONArray
-import org.json.JSONObject
-import java.math.BigDecimal
+import com.google.gson.Gson
 import java.math.RoundingMode
 import kotlin.math.roundToInt
+
+var selectedItems by mutableStateOf<List<Map<String, Any>>>(emptyList())
 
 @Composable
 fun KeranjangContent(
@@ -68,10 +55,27 @@ fun KeranjangContent(
     LaunchedEffect(itemList) {
         total = itemList.filter { it.isChecked }
             .sumOf {
-                it.price.multiply(it.jumlah.toBigDecimal()) // Menggunakan .multiply()
+                it.price.multiply(it.jumlah.toBigDecimal())
             }
-            .setScale(0, RoundingMode.HALF_UP) // Membulatkan ke angka utuh
-            .toInt() // Mengonversi ke Int
+            .setScale(0, RoundingMode.HALF_UP)
+            .toInt()
+    }
+
+    fun updateSelectedItems(item: KeranjangItem, isChecked: Boolean) {
+        val updatedList = selectedItems.toMutableList()
+        if (isChecked) {
+            updatedList.add(
+                mapOf(
+                    "id" to item.id,
+                    "name" to item.name,
+                    "jumlah" to item.jumlah,
+                    "price" to item.price
+                )
+            )
+        } else {
+            updatedList.removeAll { it["id"] == item.id.toString() }
+        }
+        selectedItems = updatedList
     }
 
     Column(
@@ -100,6 +104,8 @@ fun KeranjangContent(
                             if (it.id == item.id) it.copy(isChecked = isChecked) else it
                         }.toMutableList()
                         itemList = updatedList
+                        updateSelectedItems(item, isChecked)
+                        Log.d("Item_Satuan", "Items updated: $selectedItems")
                     }
                 )
             }
@@ -112,11 +118,28 @@ fun KeranjangContent(
             onAllCheckedChange = { checked ->
                 itemList = itemList.map { it.copy(isChecked = checked) }.toMutableList()
                 isAllChecked = checked
+                // Update selectedItems untuk semua item
+                selectedItems = if (checked) {
+                    Log.d("ALL_ITEM", "ALLL Items: $selectedItems")
+                    itemList.map {
+                        mapOf(
+                            "id" to it.id,
+                            "name" to it.name,
+                            "jumlah" to it.jumlah,
+                            "price" to it.price
+                        )
+                    }.toMutableList()
+                } else {
+                    mutableListOf() // Kosongkan selectedItems jika tidak ada yang dicentang
+                }
             },
             onItemCheckedChange = { index, checked ->
+                // Update item isChecked
                 itemList = itemList.mapIndexed { i, item ->
                     if (i == index) item.copy(isChecked = checked) else item
                 }.toMutableList()
+                // Update selectedItems
+                updateSelectedItems(itemList[index], checked)
             }
         )
     }
@@ -322,8 +345,17 @@ fun ButtonCheckout(
                 color = Color(0xFF666464),
                 fontWeight = FontWeight.Medium
             )
+            fun convertToJson(): String {
+                val gson = Gson()
+                return gson.toJson(selectedItems)
+            }
             Button(
-                onClick = { navController.navigate("pesanan") },
+                onClick = {
+                    val jsonData = convertToJson()
+                    // Mengirim jsonData yang sudah terformat JSON
+                    navController.navigate("pesanan/$jsonData")
+                    Log.d("Yang dikirim", jsonData)
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = button),
                 shape = RoundedCornerShape(0.dp),
                 modifier = Modifier
