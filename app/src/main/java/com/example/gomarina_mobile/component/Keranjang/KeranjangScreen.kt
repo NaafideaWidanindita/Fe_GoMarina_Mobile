@@ -102,17 +102,6 @@ fun KeranjangScreen(navController: NavHostController) {
             ) {
                 CircularProgressIndicator()
             }
-        } else if (errorMessage != null) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = errorMessage!!,
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center
-                )
-            }
         } else if (keranjangItems.isEmpty()) {
             Box(
                 modifier = Modifier.fillMaxSize(),

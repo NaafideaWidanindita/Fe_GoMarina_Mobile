@@ -3,6 +3,7 @@
 package com.example.gomarina_mobile.component.Keranjang
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.Orientation
@@ -38,6 +39,8 @@ import com.example.gomarina_mobile.dummyData.DummyData
 import com.example.gomarina_mobile.model.KeranjangItem
 import com.example.gomarina_mobile.ui.theme.*
 import com.google.gson.Gson
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.math.RoundingMode
 import kotlin.math.roundToInt
 
@@ -153,21 +156,21 @@ fun SwipeableItemKeranjang(
     onDelete: () -> Unit,
     onCheckChange: (Boolean) -> Unit
 ) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
+    // Fungsi untuk menghapus item dari cart menggunakan OkHttp
+    fun hapusItem(id: Int) {
+        hapusItemFromCart(id) {
+            // Setelah item dihapus, panggil onDelete untuk mengupdate UI
+            onDelete()
+            Toast.makeText(context, "Item berhasil dihapus", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     val swipeState = rememberSwipeableState(initialValue = 0)
     val maxSwipeOffset = 100.dp
     val anchors = mapOf(0f to 0, -with(LocalDensity.current) { maxSwipeOffset.toPx() } to 1)
-
-    val imageRequest = if (item.imageUrl.isNotEmpty()) {
-        ImageRequest.Builder(LocalContext.current)
-            .data(item.imageUrl.replace("localhost", "10.0.2.2"))
-            .crossfade(true)
-            .build()
-    } else {
-        ImageRequest.Builder(LocalContext.current)
-            .data(R.drawable.noimage)
-            .crossfade(true)
-            .build()
-    }
 
     Box(
         modifier = Modifier
@@ -188,7 +191,7 @@ fun SwipeableItemKeranjang(
                     .padding(end = 16.dp),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                IconButton(onClick = onDelete) {
+                IconButton(onClick = { hapusItem(item.id) }) {
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = "Delete",
@@ -223,7 +226,10 @@ fun SwipeableItemKeranjang(
                     )
                 )
                 AsyncImage(
-                    model = imageRequest,
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(item.imageUrl.replace("localhost", "10.0.2.2"))
+                        .crossfade(true)
+                        .build(),
                     contentDescription = "Gambar ${item.name}",
                     modifier = Modifier.size(64.dp)
                 )
@@ -283,8 +289,6 @@ fun SwipeableItemKeranjang(
         }
     }
 }
-
-
 
 @Composable
 fun ButtonCheckout(
@@ -372,6 +376,33 @@ fun ButtonCheckout(
             }
         }
     }
+}
+
+fun hapusItemFromCart(id: Int, onDelete: () -> Unit) {
+    // Membuat request HTTP DELETE
+    val client = OkHttpClient()
+
+    val request = Request.Builder()
+        .url("http://10.0.2.2:5000/api/v1/cart_item/$id")  // Ganti dengan URL API kamu
+        .delete()  // Menggunakan metode DELETE
+        .build()
+
+    // Menjalankan request di background thread
+    Thread {
+        try {
+            val response = client.newCall(request).execute()
+
+            if (response.isSuccessful) {
+                // Jika berhasil, panggil onDelete untuk mengupdate UI
+                onDelete()
+                Log.d("DeleteCart", "Item berhasil dihapus")
+            } else {
+                Log.d("DeleteCart", "Gagal menghapus item: ${response.message}")
+            }
+        } catch (e: Exception) {
+            Log.e("DeleteCart", "Error: ${e.message}")
+        }
+    }.start()
 }
 
 @Preview(showBackground = true)
