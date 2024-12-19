@@ -18,7 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.gomarina_mobile.model.KeranjangItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -118,9 +120,9 @@ fun KeranjangScreen(navController: NavHostController) {
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//private fun KeranjangScreenPreview() {
-//    val navController = rememberNavController()
-//    KeranjangScreen(navController = navController)
-//}
+@Preview(showBackground = true)
+@Composable
+private fun KeranjangScreenPreview() {
+    val navController = rememberNavController() // Mock NavController
+    KeranjangScreen(navController = navController)
+}

@@ -40,13 +40,7 @@ fun AppNavigation() {
                 Text("Error: Produk ID tidak valid.")
             }
         }
-//        composable("pesanan") { PesananScreen(navController = navController) }
-//        composable("pesanan/{selectedItems}") { backStackEntry ->
-//            val selectedItems = backStackEntry.arguments?.getString("selectedItems")?.split(",") ?: listOf()
-//            PesananScreen(navController = navController, selectedItems = selectedItems)
-//        }
         composable("pesanan/{selectedItems}") { backStackEntry ->
-            // Ambil parameter selectedItems dari URL yang sudah dikirim sebagai string utuh
             val selectedItems = backStackEntry.arguments?.getString("selectedItems") ?: ""
             PesananScreen(navController = navController, selectedItems = selectedItems)
         }
@@ -63,5 +57,11 @@ fun AppNavigation() {
         composable("CekPesanan") { CekPesananScreen(navController = navController) }
         composable("Setting") { SettingsScreen(navController = navController) }
         composable("feedback") { FeedbackScreen(navController = navController) }
+        composable("logout") {
+            navController.navigate("login") {
+                popUpTo("login")
+                launchSingleTop = true
+            }
+        }
     }
 }

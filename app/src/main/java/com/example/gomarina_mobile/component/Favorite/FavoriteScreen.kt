@@ -77,7 +77,6 @@ fun FavoriteScreen(
             }
         }
     }
-
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController = navController)

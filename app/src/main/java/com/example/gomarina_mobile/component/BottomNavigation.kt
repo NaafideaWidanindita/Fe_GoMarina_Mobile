@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -28,6 +29,7 @@ sealed class NavigationItem(val route: String, val label: String, val icon: Imag
     object Beranda : NavigationItem("beranda", "Beranda", Icons.Default.Home)
     object Pesanan : NavigationItem("listpesanan", "Pesanan", Icons.Default.List)
     object Pengaturan : NavigationItem("Setting", "Setting", Icons.Default.Settings)
+    object Logout : NavigationItem("logout", "Logout", Icons.Default.ExitToApp)
 }
 
 @Composable
@@ -35,7 +37,8 @@ fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
         NavigationItem.Beranda,
         NavigationItem.Pesanan,
-        NavigationItem.Pengaturan
+        NavigationItem.Pengaturan,
+        NavigationItem.Logout
     )
 
     BottomNavigation(
@@ -85,6 +88,7 @@ fun PreviewBottomNavigationBar() {
         composable(NavigationItem.Beranda.route) {}
         composable(NavigationItem.Pesanan.route) {}
         composable(NavigationItem.Pengaturan.route) {}
+        composable(NavigationItem.Logout.route) {}
     }
 
     BottomNavigationBar(navController = navController)

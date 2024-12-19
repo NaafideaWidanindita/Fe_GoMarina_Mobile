@@ -23,11 +23,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.gomarina_mobile.component.BottomNavigationBar
 import com.example.gomarina_mobile.model.Produk
 import com.example.gomarina_mobile.ui.theme.bacground
+import java.math.BigDecimal
 
 @Composable
 fun Beranda(
@@ -128,12 +131,42 @@ fun Beranda(
     }
 }
 
-//@Preview (showBackground = true)
+//@Preview(showBackground = true)
 //@Composable
-//private fun BerandaPrev() {
-//    Beranda(navController = NavController(LocalContext.current),
-//        produk = DummyData.dataProduk)
+//private fun BerandaPreview() {
+//    // Dummy data untuk produk
+//    val dummyProduk = listOf(
+//        Produk(
+//            id = 1,
+//            name = "Produk A",
+//            imageUrl = "https://via.placeholder.com/150",
+//            description = "Produk A adalah produk berkualitas",
+//            image = 0,
+//            stok = 10,
+//            price = BigDecimal("32000")
+//        ),
+//        Produk(
+//            id = 2,
+//            name = "Produk B",
+//            imageUrl = "https://via.placeholder.com/150",
+//            description = "Produk B adalah produk terbaik",
+//            image = 0,
+//            stok = 5,
+//            price = BigDecimal("45000")
+//        ),
+//        Produk(
+//            id = 3,
+//            name = "Produk C",
+//            imageUrl = "https://via.placeholder.com/150",
+//            description = "Produk C adalah produk murah",
+//            image = 0,
+//            stok = 15,
+//            price = BigDecimal("25000")
+//        )
+//    )
+//
+//    // Mock NavController
+//    val navController = rememberNavController()
+//
+//    Beranda(navController = navController, produk = dummyProduk)
 //}
-
-
-
